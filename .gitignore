@@ -1,0 +1,9 @@
+node_modules/
+*.log
+.env
+*.env.local
+dist/
+!plugin/dist/
+sdlc-mcp-server/dist/
+*.js.map
+!plugin/dist/*.js.map

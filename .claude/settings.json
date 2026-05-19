@@ -1,0 +1,58 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "Logging bash command...",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $cmd = $inp.tool_input.command; $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; Add-Content -Path \"$env:USERPROFILE\\.claude\\bash-log.txt\" -Value \"$ts | $cmd\" -ErrorAction SilentlyContinue; exit 0"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "Checking write path...",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; $root = 'g:\\PROJECT\\Learning Projects'; if ($f -and !$f.StartsWith($root)) { Write-Output \"BLOCKED: Writes outside Learning Projects are not allowed. Path: $f\"; exit 1 }; exit 0"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "Write-Output 'SDLC reminder: Before this session ends, append one line to Section 18 (Session Log) in the active SDLC_VALIDATION.md — date, work done, gate changes, and next step.'; exit 0"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "Linting Python...",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; if ($f -match '\\.py$') { if (Get-Command ruff -ErrorAction SilentlyContinue) { & ruff check --fix $f } else { Write-Output 'ruff not installed - skipping Python lint' } }; exit 0"
+          },
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "Linting SQL...",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; if ($f -match '\\.sql$') { if (Get-Command sqlfluff -ErrorAction SilentlyContinue) { & sqlfluff fix --dialect ansi $f } else { Write-Output 'sqlfluff not installed - skipping SQL lint' } }; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

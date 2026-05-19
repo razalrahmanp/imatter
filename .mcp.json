@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "sdlc-validation": {
+      "command": "npx",
+      "args": ["tsx", "sdlc-mcp-server/src/index.ts"],
+      "env": {
+        "MCP_TRANSPORT": "stdio",
+        "SDLC_PROJECT_ROOT": "g:\\PROJECT\\Learning Projects"
+      }
+    }
+  }
+}

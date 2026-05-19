@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install linters
+        run: pip install ruff sqlfluff
+
+      # Enforces: "no Python style violations" (CLAUDE.md rule → CI gate)
+      - name: Lint Python files
+        run: |
+          mapfile -t files < <(find . -name "*.py" ! -path "./.git/*" 2>/dev/null)
+          if [[ ${#files[@]} -gt 0 ]]; then
+            ruff check "${files[@]}"
+          else
+            echo "No Python files to lint"
+          fi
+
+      # Enforces: "SQL must be valid and consistently styled" (CLAUDE.md rule → CI gate)
+      - name: Lint SQL files
+        run: |
+          mapfile -t files < <(find . -name "*.sql" ! -path "./.git/*" 2>/dev/null)
+          if [[ ${#files[@]} -gt 0 ]]; then
+            sqlfluff lint --dialect ansi "${files[@]}"
+          else
+            echo "No SQL files to lint"
+          fi
+
+      # Enforces: "solutions must be tested" (CLAUDE.md rule → CI gate)
+      - name: Run Python tests
+        run: |
+          mapfile -t tests < <(find . \( -name "test_*.py" -o -name "*_test.py" \) ! -path "./.git/*" 2>/dev/null)
+          if [[ ${#tests[@]} -gt 0 ]]; then
+            pip install pytest
+            pytest --tb=short -q
+          else
+            echo "No test files found - skipping"
+          fi
+
+      # Enforces: "every drill folder must have a README" (CLAUDE.md rule → CI gate)
+      - name: Check all drill folders have README
+        run: |
+          failed=0
+          for dir in [0-9][0-9]-*/; do
+            if [[ -d "$dir" && ! -f "${dir}README.md" ]]; then
+              echo "Missing README.md in $dir"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      # Enforces: "no secrets committed" (CLAUDE.md rule → CI gate)
+      - name: Scan for secrets
+        run: |
+          if grep -rn "API_KEY\s*=\s*['\"][^'\"]" . --include="*.py" --include="*.sql" --include="*.env" 2>/dev/null | grep -v ".git"; then
+            echo "Possible hardcoded secret found"
+            exit 1
+          fi
+          echo "Secret scan passed"

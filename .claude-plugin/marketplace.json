@@ -1,0 +1,89 @@
+{
+  "name": "sdlc-tools",
+  "owner": {
+    "name": "Learning Projects",
+    "email": "system@riddoff.com"
+  },
+  "plugins": [
+    {
+      "name": "sdlc-validation",
+      "source": "./plugin",
+      "description": "SDLC validation enforcement — 10-stage gate checks, decision logging, automatic session protocols. Enforces production-grade engineering practices and blocks Claude from writing code until the correct gate is PASSED.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Learning Projects"
+      },
+      "keywords": ["sdlc", "validation", "gates", "engineering", "process"],
+      "category": "productivity",
+
+      "commands": [
+        "./skills/"
+      ],
+
+      "userConfig": {
+        "project_root": {
+          "description": "Absolute path to the directory containing SDLC_VALIDATION.md (e.g. C:\\Projects\\MyApp). Leave blank to auto-detect from the current working directory each session.",
+          "sensitive": false
+        }
+      },
+
+      "mcpServers": {
+        "sdlc-validation": {
+          "command": "node",
+          "args": ["${CLAUDE_PLUGIN_ROOT}/dist/index.js"],
+          "env": {
+            "MCP_TRANSPORT": "stdio",
+            "SDLC_PROJECT_ROOT": "${user_config.project_root}"
+          }
+        }
+      },
+
+      "hooks": {
+        "SessionStart": [
+          {
+            "hooks": [
+              {
+                "type": "mcp_tool",
+                "server": "sdlc-validation",
+                "tool": "get_project_identity",
+                "input": {},
+                "statusMessage": "SDLC: loading project identity..."
+              },
+              {
+                "type": "mcp_tool",
+                "server": "sdlc-validation",
+                "tool": "check_gate_status",
+                "input": {},
+                "statusMessage": "SDLC: checking gate status..."
+              }
+            ]
+          }
+        ],
+        "Stop": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "shell": "powershell",
+                "statusMessage": "SDLC: session close reminder",
+                "command": "Write-Output 'SDLC plugin: session ending — call update_session_log(work_done, gates_changed, next_step) to record this session in Section 18.'; exit 0"
+              }
+            ]
+          }
+        ]
+      },
+
+      "permissions": {
+        "allow": [
+          "mcp__sdlc-validation__check_gate_status",
+          "mcp__sdlc-validation__get_project_identity",
+          "mcp__sdlc-validation__read_sdlc_section",
+          "mcp__sdlc-validation__log_decision",
+          "mcp__sdlc-validation__log_open_item",
+          "mcp__sdlc-validation__update_session_log",
+          "mcp__sdlc-validation__verify_artifact"
+        ]
+      }
+    }
+  ]
+}
