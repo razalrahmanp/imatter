@@ -59,9 +59,10 @@ The Section 0 protocol rules (verification, gate discipline, scope discipline, d
 
 | Command | What it does |
 |---|---|
-| `/sdlc-init` | Copy the `SDLC_VALIDATION.md` template into the current project root (run once per new project) |
+| `/sdlc-init` | Initialize a new project — copies the template then guides you through structured questions to complete Section 1 and Stage 1 artifacts |
+| `/sdlc-work <N>` | Work on stage N — checks prerequisite gate, asks targeted questions one at a time, creates required artifacts, shows gate evidence |
 | `/sdlc-status` | Show all gate statuses and flag what is blocking each incomplete stage |
-| `/sdlc-gate <N>` | Check gate N — if blocked, reads the stage section and lists missing artifacts |
+| `/sdlc-gate <N>` | Check a specific gate — if blocked, lists missing artifacts |
 | `/sdlc-load` | Load the full `SDLC_VALIDATION.md` into context (use when you need to reference multiple sections at once) |
 
 ---
