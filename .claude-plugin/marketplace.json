@@ -85,7 +85,8 @@
           "mcp__sdlc-validation__log_decision",
           "mcp__sdlc-validation__log_open_item",
           "mcp__sdlc-validation__update_session_log",
-          "mcp__sdlc-validation__verify_artifact"
+          "mcp__sdlc-validation__verify_artifact",
+          "mcp__sdlc-validation__init_project"
         ]
       }
     }

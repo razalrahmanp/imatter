@@ -59,6 +59,7 @@ The Section 0 protocol rules (verification, gate discipline, scope discipline, d
 
 | Command | What it does |
 |---|---|
+| `/sdlc-init` | Copy the `SDLC_VALIDATION.md` template into the current project root (run once per new project) |
 | `/sdlc-status` | Show all gate statuses and flag what is blocking each incomplete stage |
 | `/sdlc-gate <N>` | Check gate N — if blocked, reads the stage section and lists missing artifacts |
 | `/sdlc-load` | Load the full `SDLC_VALIDATION.md` into context (use when you need to reference multiple sections at once) |
@@ -69,6 +70,7 @@ The Section 0 protocol rules (verification, gate discipline, scope discipline, d
 
 | Tool | Purpose |
 |---|---|
+| `init_project` | Copy bundled template to project root — never overwrites an existing file |
 | `get_project_identity` | Read Section 1 (project identity table) |
 | `check_gate_status` | Return gate status table; `isError: true` if a specific stage gate is not PASSED |
 | `read_sdlc_section` | Fetch a single section by heading — stage criteria, decision log, etc. |
@@ -86,10 +88,9 @@ All 8 tools are pre-approved — they fire without prompting you.
 
 ### Start a new project
 
-1. Copy `SDLC_VALIDATION.md` into the **root of your project folder**.
-2. Open the project in VS Code with Claude Code active.
-3. Start a session — the plugin loads your project identity and gate status automatically.
-4. Tell Claude what you want to build. It will run Stage 1 and ask for confirmation before creating anything.
+1. Open the project in VS Code with Claude Code active.
+2. Run `/sdlc-init` — the plugin copies the `SDLC_VALIDATION.md` template into your project root automatically.
+3. Tell Claude what you want to build. It will fill in Section 1 (Project Identity) and ask for confirmation before creating anything.
 
 ### Continue an existing project
 

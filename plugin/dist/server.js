@@ -1,6 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
 import { resolveProjectRoot, findSdlcFile, readSdlcContent, getGateStatuses, getSdlcSection, appendTableRow, artifactInfo, } from "./sdlc.js";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // ── Section 0 protocol rules shipped as a reusable constant ───────────────────
 const PROTOCOL_RULES = `# SDLC Validation Protocol — Section 0
 
@@ -270,6 +274,33 @@ export function createServer() {
         catch (err) {
             return { content: [{ type: "text", text: String(err) }], isError: true };
         }
+    });
+    server.tool("init_project", "Copy the bundled SDLC_VALIDATION.md template into the project root. " +
+        "Run this once when starting a new project — never overwrites an existing file.", { project_root: z.string().optional() }, async ({ project_root }) => {
+        const root = resolveProjectRoot(project_root);
+        const dest = path.join(root, "SDLC_VALIDATION.md");
+        if (fs.existsSync(dest)) {
+            return {
+                content: [{ type: "text", text: `SDLC_VALIDATION.md already exists at ${dest} — not overwritten.` }],
+            };
+        }
+        const templatePath = path.join(__dirname, "..", "template", "SDLC_VALIDATION.md");
+        if (!fs.existsSync(templatePath)) {
+            return {
+                content: [{ type: "text", text: `Template not found at ${templatePath}` }],
+                isError: true,
+            };
+        }
+        fs.copyFileSync(templatePath, dest);
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `SDLC_VALIDATION.md created at ${dest}\n\n` +
+                        `Next: tell me about your project and I will fill in Section 1 (Project Identity) from your repo.`,
+                },
+            ],
+        };
     });
     // ── RESOURCES ──────────────────────────────────────────────────────────────
     server.resource("sdlc-validation", "sdlc://validation", { description: "Full SDLC_VALIDATION.md for the current project", mimeType: "text/markdown" }, async (uri) => {
