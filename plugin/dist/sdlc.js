@@ -14,7 +14,7 @@ export function findSdlcFile(projectRoot) {
         `Set SDLC_PROJECT_ROOT env var or pass project_root to the tool.`);
 }
 export function readSdlcContent(sdlcPath) {
-    return readFileSync(sdlcPath, "utf-8");
+    return readFileSync(sdlcPath, "utf-8").replace(/\r\n/g, "\n");
 }
 export function getGateStatuses(content) {
     // Parse the Quick Reference table at the end of the document

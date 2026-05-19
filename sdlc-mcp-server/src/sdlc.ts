@@ -24,7 +24,7 @@ export function findSdlcFile(projectRoot: string): string {
 }
 
 export function readSdlcContent(sdlcPath: string): string {
-  return readFileSync(sdlcPath, "utf-8");
+  return readFileSync(sdlcPath, "utf-8").replace(/\r\n/g, "\n");
 }
 
 export function getGateStatuses(content: string): GateStatus[] {
