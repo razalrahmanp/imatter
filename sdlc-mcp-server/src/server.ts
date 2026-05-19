@@ -60,6 +60,48 @@ export function createServer(): McpServer {
   // ── TOOLS ──────────────────────────────────────────────────────────────────
 
   server.tool(
+    "load_sdlc_context",
+    "Load the full SDLC_VALIDATION.md into Claude's context. " +
+      "Called automatically by the SessionStart hook — Claude is bound by the rules it contains.",
+    { project_root: z.string().optional() },
+    async ({ project_root }) => {
+      try {
+        const root = resolveProjectRoot(project_root);
+        const sdlcPath = findSdlcFile(root);
+        const content = readSdlcContent(sdlcPath);
+        const statuses = getGateStatuses(content);
+        const blocked = statuses.filter(
+          (s) => s.stage <= 10 && s.status !== "PASSED" && s.status !== "ONGOING"
+        );
+        const gateNote =
+          blocked.length > 0
+            ? `\n\n⚠ GATES NOT PASSED: Stages ${blocked.map((s) => s.stage).join(", ")} are not yet PASSED. ` +
+              `Do NOT write implementation code for those stages.`
+            : `\n\n✓ All gates passed or ongoing.`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text:
+                `SDLC_VALIDATION.md loaded from ${sdlcPath}\n` +
+                `You are bound by every rule in this document for this session.\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                content +
+                gateNote,
+            },
+          ],
+        };
+      } catch (err) {
+        return {
+          content: [{ type: "text", text: `No SDLC_VALIDATION.md found: ${err}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
     "check_gate_status",
     "Check whether an SDLC stage gate is PASSED. Always call before writing code for a stage. " +
       "Returns isError:true when the gate is not yet passed so Claude stops and reports to the user.",
