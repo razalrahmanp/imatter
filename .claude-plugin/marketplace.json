@@ -11,8 +11,10 @@
       "description": "SDLC validation enforcement — 10-stage gate checks, decision logging, automatic session protocols. Enforces production-grade engineering practices and blocks Claude from writing code until the correct gate is PASSED.",
       "version": "1.0.0",
       "author": {
-        "name": "Learning Projects"
+        "name": "razalrahmanp"
       },
+      "repository": "https://github.com/razalrahmanp/imatter",
+      "homepage": "https://github.com/razalrahmanp/imatter",
       "keywords": ["sdlc", "validation", "gates", "engineering", "process"],
       "category": "productivity",
 
