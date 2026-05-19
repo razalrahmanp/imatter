@@ -39,11 +39,11 @@
               {
                 "type": "mcp_tool",
                 "server": "sdlc-validation",
-                "tool": "load_sdlc_context",
+                "tool": "get_project_identity",
                 "input": {
                   "project_root": "${cwd}"
                 },
-                "statusMessage": "SDLC: loading validation rules from project..."
+                "statusMessage": "SDLC: loading project identity..."
               },
               {
                 "type": "mcp_tool",
