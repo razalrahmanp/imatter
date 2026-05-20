@@ -10,11 +10,19 @@ import { parseRegions, hashContent } from "./regions.js";
 import { SECTION_MAP } from "./template-generator.js";
 import { FRAMEWORK_VERSION } from "./state.js";
 
+const KNOWN_FLAGS = new Set(["--dry-run", "--force"]);
+
 function parseArgs(argv: string[]): {
   projectRoot?: string;
   dryRun: boolean;
   force: boolean;
 } {
+  for (const arg of argv) {
+    if (!arg.startsWith("--project-root=") && !KNOWN_FLAGS.has(arg)) {
+      process.stderr.write(`Unknown flag: ${arg}\n`);
+      process.exit(1);
+    }
+  }
   return {
     projectRoot: argv.find((x) => x.startsWith("--project-root="))?.split("=")[1],
     dryRun: argv.includes("--dry-run"),
@@ -22,8 +30,10 @@ function parseArgs(argv: string[]): {
   };
 }
 
+// Returns the index (exclusive) of the line that ends the ## section starting at headingIndex.
+// Stops at any heading of equal or lesser depth (## or #), treating deeper headings (###) as content.
 function sectionEnd(lines: string[], headingIndex: number): number {
-  const level = (lines[headingIndex].match(/^#+/) ?? ["##"])[0].length;
+  const level = lines[headingIndex].match(/^#+/)?.[0].length ?? 2;
   const pattern = new RegExp(`^#{1,${level}}\\s`);
   for (let i = headingIndex + 1; i < lines.length; i++) {
     if (pattern.test(lines[i])) return i;
@@ -88,6 +98,14 @@ async function main(): Promise<void> {
 
     out.push(line);
     i++;
+  }
+
+  if (matchedCount === 0) {
+    process.stderr.write(
+      `Warning: no SECTION_MAP headings found in ${sdlcPath}.\n` +
+      `The file may not be a valid SDLC_VALIDATION.md — no changes written.\n`
+    );
+    process.exit(1);
   }
 
   const result = out.join("\n");
