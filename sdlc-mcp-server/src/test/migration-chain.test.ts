@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { migration } from "../migrations/1.0.0-to-1.1.0.js";
 import { runMigrations } from "../migration.js";
 import { parseRegions } from "../regions.js";
+import { generateTaggedTemplate } from "../template-generator.js";
 
 // Normalize CRLF so fixture content matches what readSdlcContent returns
 const FIXTURE = readFileSync(
@@ -227,6 +228,80 @@ test("runMigrations: no-op when fromVersion already equals toVersion", async () 
     assert.equal(result.backupPath, null, "no backup when no migration runs");
     assert.equal(result.allChanges.length, 0);
     assert.equal(result.finalVersion, "1.1.0", "finalVersion must equal fromVersion on no-op path");
+  } finally {
+    cleanup(dir);
+  }
+});
+
+// ── Pipeline: migrate → tag ───────────────────────────────────────────────────
+
+test("pipeline: migrate then generateTaggedTemplate produces zero parse errors", async () => {
+  const dir = makeTempDir();
+  try {
+    // Step 1: migrate 1.0.0 → 1.1.0 (inserts version marker)
+    const migrated = await migrateFixture(dir);
+
+    assert.ok(
+      migrated.finalContent.includes('<!-- SDLC:version "1.1.0" -->'),
+      "precondition: migrated content must have version marker before tagging",
+    );
+
+    // Step 2: apply region markers (the sdlc-tag --force step)
+    const generated = generateTaggedTemplate(migrated.finalContent, "1.1.0");
+    assert.ok(generated.tagged.length > 0, "tagged output must be non-empty");
+
+    // Step 3: parse the tagged output — must have zero errors
+    const parsed = parseRegions(generated.tagged);
+    assert.equal(
+      parsed.errors.length,
+      0,
+      `parseRegions must find 0 errors after full pipeline; got:\n  ${
+        parsed.errors.map((e) => e.message).join("\n  ")
+      }`,
+    );
+
+    assert.ok(parsed.regions.length > 0, "must have at least one region after tagging");
+
+    // frameworkVersion must survive the full migrate→tag→parse round-trip
+    assert.equal(
+      parsed.frameworkVersion,
+      "1.1.0",
+      "frameworkVersion must be 1.1.0 after full pipeline",
+    );
+  } finally {
+    cleanup(dir);
+  }
+});
+
+test("pipeline: tagged output registry contains known SECTION_MAP regions", async () => {
+  const dir = makeTempDir();
+  try {
+    const migrated = await migrateFixture(dir);
+    const generated = generateTaggedTemplate(migrated.finalContent, "1.1.0");
+
+    // The fixture contains sections for:
+    //   "0. Protocol Rules — Claude must read this first" → id: "protocol-rules"
+    //   "1. Project Identity" → id: "project-identity"
+    //   "Quick Reference — Gate Status Summary" → id: "quick-reference"
+    assert.ok(
+      generated.registry.has("protocol-rules"),
+      "registry must contain protocol-rules region",
+    );
+    assert.ok(
+      generated.registry.has("project-identity"),
+      "registry must contain project-identity region",
+    );
+    assert.ok(
+      generated.registry.has("quick-reference"),
+      "registry must contain quick-reference region",
+    );
+
+    // Fixture only uses known headings — no unknown sections expected
+    assert.equal(
+      generated.unknownSections.length,
+      0,
+      `fixture must not introduce unknown sections; got: ${generated.unknownSections.join(", ")}`,
+    );
   } finally {
     cleanup(dir);
   }
