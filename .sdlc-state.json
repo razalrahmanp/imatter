@@ -11,6 +11,70 @@
   },
   "history": [],
   "stages": {
+    "1": {
+      "name": "Inception & Requirements",
+      "sdlc_heading": "2. Stage 1 — Inception & Requirements",
+      "imports": [],
+      "sub_agents": [
+        { "id": "spec-file-finder",   "check": "docs/spec.md exists with FR-x.y.z identifiers and NFRs quantified", "model": "haiku",  "ns": "spec_docs" },
+        { "id": "scope-grep-checker", "check": "In-scope and out-of-scope table present; personas defined",          "model": "haiku",  "ns": "scope_table" },
+        { "id": "req-boundary-check", "check": "FR identifiers follow consistent naming pattern across all FRs",     "model": "sonnet", "ns": "req_consistency" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "spec_docs",       "must": "pass" },
+          { "ns": "scope_table",     "must": "pass" },
+          { "ns": "req_consistency", "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "spec_docs": null, "scope_table": null, "req_consistency": null }
+    },
+    "2": {
+      "name": "Architecture & Design",
+      "sdlc_heading": "3. Stage 2 — Architecture & Design",
+      "imports": [
+        { "stage": 1, "key": "scope_summary" }
+      ],
+      "sub_agents": [
+        { "id": "arch-file-finder",  "check": "docs/architecture.md and docs/decisions.md (ADRs) exist",            "model": "haiku",  "ns": "arch_docs" },
+        { "id": "boundary-analyzer", "check": "Module boundaries clean — no cross-domain imports, no DB in frontend", "model": "sonnet", "ns": "module_boundaries" },
+        { "id": "adr-grep-checker",  "check": "At least 3 ADRs documented; each has context, decision, consequences", "model": "haiku",  "ns": "adr_quality" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "arch_docs",         "must": "pass" },
+          { "ns": "module_boundaries", "must": "pass" },
+          { "ns": "adr_quality",       "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "arch_docs": null, "module_boundaries": null, "adr_quality": null }
+    },
+    "3": {
+      "name": "Development Practices & Standards",
+      "sdlc_heading": "4. Stage 3 — Development Practices & Standards",
+      "imports": [],
+      "sub_agents": [
+        { "id": "config-reader",   "check": "ESLint config exists; tsconfig.json has strict:true and noImplicitAny:true", "model": "haiku",  "ns": "linter_config" },
+        { "id": "dep-scanner",     "check": "package-lock.json committed; no known vulnerable deps",                      "model": "haiku",  "ns": "deps" },
+        { "id": "ts-ignore-grep",  "check": "No @ts-ignore without explanation comment",                                  "model": "haiku",  "ns": "ts_hygiene" },
+        { "id": "pattern-checker", "check": "Consistent error handling, naming, and import patterns across codebase",     "model": "sonnet", "ns": "patterns" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "linter_config", "must": "pass" },
+          { "ns": "deps",          "must": "pass_or_acknowledge" },
+          { "ns": "ts_hygiene",    "must": "pass" },
+          { "ns": "patterns",      "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "linter_config": null, "deps": null, "ts_hygiene": null, "patterns": null }
+    },
     "4": {
       "name": "Testing Strategy",
       "sdlc_heading": "5. Stage 4 — Testing Strategy",
@@ -66,6 +130,117 @@
         "build_gate": null,
         "artifacts":  null
       }
+    },
+    "6": {
+      "name": "Deployment & Release",
+      "sdlc_heading": "7. Stage 6 — Deployment & Release",
+      "imports": [
+        { "stage": 5, "key": "ci_test_command" }
+      ],
+      "sub_agents": [
+        { "id": "deploy-config-reader", "check": "Deployment config exists (Amplify/SAM/CDK); staging env defined",   "model": "haiku",  "ns": "deploy_config" },
+        { "id": "iac-grep-checker",     "check": "Infrastructure-as-code present; no manual console steps in runbook", "model": "haiku",  "ns": "iac" },
+        { "id": "secret-scanner",       "check": "No hardcoded secrets in IaC or deployment scripts",                  "model": "haiku",  "ns": "secrets" },
+        { "id": "rollback-checker",     "check": "Rollback procedure documented and tested in staging",                 "model": "sonnet", "ns": "rollback" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "deploy_config", "must": "pass" },
+          { "ns": "iac",           "must": "pass_or_acknowledge" },
+          { "ns": "secrets",       "must": "pass" },
+          { "ns": "rollback",      "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "deploy_config": null, "iac": null, "secrets": null, "rollback": null }
+    },
+    "7": {
+      "name": "Observability & Operations",
+      "sdlc_heading": "8. Stage 7 — Observability & Operations",
+      "imports": [],
+      "sub_agents": [
+        { "id": "logging-config-reader", "check": "Structured logging configured; log levels per environment",       "model": "haiku",  "ns": "logging" },
+        { "id": "metrics-grep-checker",  "check": "Metrics instrumentation present for critical paths",              "model": "haiku",  "ns": "metrics" },
+        { "id": "runbook-file-finder",   "check": "Runbooks exist for on-call scenarios (deploy, rollback, alerts)", "model": "haiku",  "ns": "runbooks" },
+        { "id": "alert-config-reader",   "check": "Alerting rules defined; p95 latency and error-rate thresholds set", "model": "sonnet", "ns": "alerts" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "logging",  "must": "pass" },
+          { "ns": "metrics",  "must": "pass_or_acknowledge" },
+          { "ns": "runbooks", "must": "pass_or_acknowledge" },
+          { "ns": "alerts",   "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "logging": null, "metrics": null, "runbooks": null, "alerts": null }
+    },
+    "8": {
+      "name": "Security",
+      "sdlc_heading": "9. Stage 8 — Security",
+      "imports": [
+        { "stage": 2, "key": "auth_pattern" },
+        { "stage": 2, "key": "rls_pattern" }
+      ],
+      "sub_agents": [
+        { "id": "secret-scanner",      "check": "No secrets in codebase, git history clean",                           "model": "haiku",  "ns": "secrets" },
+        { "id": "auth-boundary-check", "check": "JWT verification present in every Lambda; RLS set before every query", "model": "sonnet", "ns": "auth_boundary" },
+        { "id": "dep-vuln-scanner",    "check": "npm audit clean or all vulnerabilities acknowledged",                   "model": "haiku",  "ns": "dep_vulns" },
+        { "id": "input-val-grep",      "check": "Input validation at all API entry points; no raw SQL string concat",   "model": "haiku",  "ns": "input_validation" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "secrets",          "must": "pass" },
+          { "ns": "auth_boundary",    "must": "pass" },
+          { "ns": "dep_vulns",        "must": "pass_or_acknowledge" },
+          { "ns": "input_validation", "must": "pass" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "secrets": null, "auth_boundary": null, "dep_vulns": null, "input_validation": null }
+    },
+    "9": {
+      "name": "Performance & Scale",
+      "sdlc_heading": "10. Stage 9 — Performance & Scale",
+      "imports": [],
+      "sub_agents": [
+        { "id": "load-test-grep",       "check": "Load test scripts exist; p95 latency target defined and tested",      "model": "haiku",  "ns": "load_tests" },
+        { "id": "perf-pattern-checker", "check": "No N+1 queries; pagination present on list endpoints; cache headers set", "model": "sonnet", "ns": "perf_patterns" },
+        { "id": "db-index-grep",        "check": "Indexes on all foreign keys and frequent query columns",               "model": "haiku",  "ns": "db_indexes" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "load_tests",    "must": "pass_or_acknowledge" },
+          { "ns": "perf_patterns", "must": "pass" },
+          { "ns": "db_indexes",    "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "load_tests": null, "perf_patterns": null, "db_indexes": null }
+    },
+    "10": {
+      "name": "Data & Analytics Engineering",
+      "sdlc_heading": "11. Stage 10 — Data & Analytics Engineering",
+      "imports": [],
+      "sub_agents": [
+        { "id": "data-contract-grep", "check": "Data contracts (schemas) defined for all event types emitted",        "model": "haiku",  "ns": "data_contracts" },
+        { "id": "analytics-pattern",  "check": "Analytics events follow consistent naming and property conventions",   "model": "sonnet", "ns": "analytics_patterns" },
+        { "id": "pii-grep-checker",   "check": "No PII in analytics events or logs; PII handling documented",         "model": "haiku",  "ns": "pii_handling" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "data_contracts",     "must": "pass_or_acknowledge" },
+          { "ns": "analytics_patterns", "must": "pass_or_acknowledge" },
+          { "ns": "pii_handling",       "must": "pass" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": { "data_contracts": null, "analytics_patterns": null, "pii_handling": null }
     }
   },
   "flagged": [],
