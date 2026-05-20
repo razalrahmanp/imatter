@@ -777,6 +777,7 @@ Every call to an LLM in the product codebase must have:
 | 2026-05-20 | Massive skill + agent build sweep. Plugin skills expanded from 21 → 116 (security, reliability, observability, API design, testing, engineering practice, stack-specific Postgres/AWS/LLM/React, compliance GDPR/HIPAA/EU-AI-Act/SOC2/PCI, UI patterns). Created 31 sub-agents in plugin/agents/ covering all design categories (8 audit, 8 production-coding, 7 quality-enforcement, 4 integration, 2 UI, 2 lifecycle). Wired `agents: ["./agents/"]` into marketplace.json. Updated sdlc-design.md Section 19 to reflect ~85% built (was claiming 5%). Updated sdlc-validate-inventory.md with full category-by-category roster. Added README install guidance for npm 404 case. | none (root SDLC has no active gate cursor — template repo) | Pick one of: (a) consolidate duplicate `spec-compliance-verifier` / `sdlc-spec-compliance-auditor`, (b) build the parallel-wait MCP tool, (c) build the compliance-module loader so per-project L5 skill loading works. |
 | 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 | 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 
 ---
 

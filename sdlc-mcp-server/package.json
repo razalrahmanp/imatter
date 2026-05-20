@@ -10,7 +10,8 @@
     "sdlc-audit": "dist/cli.js",
     "sdlc-upgrade-check": "dist/upgrade-check.js",
     "sdlc-tag": "dist/tag.js",
-    "sdlc-migrate": "dist/migrate.js"
+    "sdlc-migrate": "dist/migrate.js",
+    "sdlc-whats-new": "dist/whats-new.js"
   },
   "scripts": {
     "build": "tsc",
@@ -19,7 +20,8 @@
     "dev": "tsx src/index.ts",
     "dev:http": "cross-env MCP_TRANSPORT=http tsx src/index.ts",
     "generate-template": "tsx src/generate-template.ts",
-    "test": "node --import tsx/esm --test src/test/migration-chain.test.ts src/test/audit.test.ts"
+    "test": "node --import tsx/esm --test src/test/stability.test.ts",
+    "test:all": "node --import tsx/esm --test src/test/stability.test.ts src/test/migration-chain.test.ts src/test/audit.test.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

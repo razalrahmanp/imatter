@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { migration } from "../migrations/1.0.0-to-1.1.0.js";
 import { runMigrations } from "../migration.js";
 import { parseRegions } from "../regions.js";
+import { generateTaggedTemplate } from "../template-generator.js";
 // Normalize CRLF so fixture content matches what readSdlcContent returns
 const FIXTURE = readFileSync(new URL("./fixtures/minimal-v1.0.0.md", import.meta.url), "utf-8").replace(/\r\n/g, "\n");
 function makeTempDir() {
@@ -132,19 +133,24 @@ test("runMigrations: idempotent — second run does not duplicate the version ma
             registryPath: join(dir, "nonexistent-registry.json"),
             dryRun: false,
         });
-        // Second run — re-reads from disk (which now has the marker)
+        // Second run: caller correctly bumps fromVersion to 1.1.0
+        // The runner's filter skips the script entirely (1.1.0 > 1.1.0 = false)
         const result2 = await runMigrations({
             projectRoot: dir,
             sdlcPath,
-            fromVersion: "1.0.0",
+            fromVersion: "1.1.0",
             toVersion: "1.1.0",
             scripts: [migration],
             registryPath: join(dir, "nonexistent-registry.json"),
             dryRun: false,
         });
-        const markerCount = (result2.finalContent.match(/<!-- SDLC:version "1\.1\.0" -->/g) ?? []).length;
-        assert.equal(markerCount, 1, "version marker must appear exactly once after two runs");
-        assert.ok(result2.allWarnings.some((w) => w.includes("already present")), "second run must warn that the marker is already present");
+        assert.equal(result2.steps.length, 0, "runner must skip all scripts when already at target version");
+        assert.equal(result2.backupPath, null, "no backup when no migration runs");
+        assert.equal(result2.allChanges.length, 0, "no changes when no migration runs");
+        // The on-disk file must still have exactly one marker from the first run
+        const onDisk = readFileSync(sdlcPath, "utf-8");
+        const markerCount = (onDisk.match(/<!-- SDLC:version "1\.1\.0" -->/g) ?? []).length;
+        assert.equal(markerCount, 1, "version marker must appear exactly once on disk after two runs");
     }
     finally {
         cleanup(dir);
@@ -167,6 +173,49 @@ test("runMigrations: no-op when fromVersion already equals toVersion", async () 
         assert.equal(result.steps.length, 0, "no steps should run when already at target version");
         assert.equal(result.backupPath, null, "no backup when no migration runs");
         assert.equal(result.allChanges.length, 0);
+        assert.equal(result.finalVersion, "1.1.0", "finalVersion must equal fromVersion on no-op path");
+    }
+    finally {
+        cleanup(dir);
+    }
+});
+// ── Pipeline: migrate → tag ───────────────────────────────────────────────────
+test("pipeline: migrate then generateTaggedTemplate produces zero parse errors", async () => {
+    const dir = makeTempDir();
+    try {
+        // Step 1: migrate 1.0.0 → 1.1.0 (inserts version marker)
+        const migrated = await migrateFixture(dir);
+        assert.ok(migrated.finalContent.includes('<!-- SDLC:version "1.1.0" -->'), "precondition: migrated content must have version marker before tagging");
+        // Step 2: apply region markers (the sdlc-tag --force step)
+        const generated = generateTaggedTemplate(migrated.finalContent, "1.1.0");
+        assert.ok(generated.tagged.length > 0, "tagged output must be non-empty");
+        // Must contain exactly one version marker — not two (bug guard for migrate→tag handoff)
+        assert.equal((generated.tagged.match(/<!-- SDLC:version/g) ?? []).length, 1, "tagged output must contain exactly one version marker (not duplicated by generateTaggedTemplate)");
+        // Step 3: parse the tagged output — must have zero errors
+        const parsed = parseRegions(generated.tagged);
+        assert.equal(parsed.errors.length, 0, `parseRegions must find 0 errors after full pipeline; got:\n  ${parsed.errors.map((e) => e.message).join("\n  ")}`);
+        assert.ok(parsed.regions.length > 0, "must have at least one region after tagging");
+        // frameworkVersion must survive the full migrate→tag→parse round-trip
+        assert.equal(parsed.frameworkVersion, "1.1.0", "frameworkVersion must be 1.1.0 after full pipeline");
+    }
+    finally {
+        cleanup(dir);
+    }
+});
+test("pipeline: tagged output registry contains known SECTION_MAP regions", async () => {
+    const dir = makeTempDir();
+    try {
+        const migrated = await migrateFixture(dir);
+        const generated = generateTaggedTemplate(migrated.finalContent, "1.1.0");
+        // The fixture contains sections for:
+        //   "0. Protocol Rules — Claude must read this first" → id: "protocol-rules"
+        //   "1. Project Identity" → id: "project-identity"
+        //   "Quick Reference — Gate Status Summary" → id: "quick-reference"
+        assert.ok(generated.registry.has("protocol-rules"), "registry must contain protocol-rules region");
+        assert.ok(generated.registry.has("project-identity"), "registry must contain project-identity region");
+        assert.ok(generated.registry.has("quick-reference"), "registry must contain quick-reference region");
+        // Fixture only uses known headings — no unknown sections expected
+        assert.equal(generated.unknownSections.length, 0, `fixture must not introduce unknown sections; got: ${generated.unknownSections.join(", ")}`);
     }
     finally {
         cleanup(dir);
