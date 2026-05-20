@@ -778,6 +778,9 @@ Every call to an LLM in the product codebase must have:
 | 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 | 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 | 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Migration chain tests (11 passing, bug fix in template-generator.ts) + audit tools sdlc_verify_history & sdlc_trace_requirements (26 tests passing, plugin/dist rebuilt) | none | Consider sdlc_spec_compliance tool (HIGH priority in design doc) or commit/push audit tools branch |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 
 ---
 
