@@ -1,5 +1,6 @@
 # SDLC Validate — Consolidated Design Reference
-<!-- Updated: 2026-05-20 (session 2). Source: all sessions to date. -->
+<!-- Updated: 2026-05-20 (session 3). Source: all sessions to date. -->
+<!-- Implementation status: ~45% built. See Section 8 (Build Sequence) for breakdown. -->
 
 ---
 
@@ -51,24 +52,25 @@ Every skill has exactly two sections:
 
 ## 2. Skill Inventory
 
-### Sprint plan summary (93 unique skills target)
+### Actual skill count: 116 files in `plugin/skills/` (verified 2026-05-20)
 
 | Layer | Count | Status |
 |---|---|---|
 | Generic (patterns) | 21 | Done |
 | Practice (tool/process) | 14 | Done |
 | Stack: react-supabase-lambda | 12 | Done |
-| Compliance: GDPR | 3 | Done |
+| Compliance: GDPR | ~5 | Done (more than original 3 — consent mgmt, cross-border, DPA added) |
 | Compliance: EU AI Act | 4 | Done |
 | Compliance: SOC 2 | 3 | Done |
-| Compliance: HIPAA | 4 | Done |
+| Compliance: HIPAA | ~5 | Done (PHI handling + PHI access logging added) |
 | Compliance: PCI DSS | 4 | Done |
 | Compliance: WCAG 2.1 AA | 1 | Done |
 | Compliance: EAA | 1 | Done |
 | Compliance: ADA Title III | 1 | Done |
-| **Total** | **68** | **~Done** |
+| AWS infra / React patterns | ~25 | Done (Bedrock, SQS, Lambda, CloudFront, Cognito, etc.) |
+| Agent / SDLC process | ~10 | Done (agent-response-contract, agent-dispatch, etc.) |
+| **Total** | **116** | **Done** |
 | Project: RABOS | 12 | Pending |
-| Additional generic/stack | ~13 | Pending |
 
 ### VALID_TASK_TYPES (from validate-skills.js)
 Full set is in `practices/test-practice/scripts/validate-skills.js`. Key categories: HTTP/Lambda, Workers/queues, Database, Frontend, AI/LLM, Integrations, Features/flags, Events, Admin/monitoring/ops, Compliance/audit, Process/review, RABOS-specific, plus `any`/`all`.
@@ -129,13 +131,36 @@ SdlcState._signature?: Signature           (HMAC chain — never edit manually)
 | `sdlc_dispatch_agents` | Create dispatch record for stage sub-agents; returns parallel run checklist |
 | `sdlc_dispatch_status` | Check pending/reported counts; signals when gate is ready to run |
 
-### Planned future tools
+### MCP resources (on-demand, correct pattern — do NOT load at session start)
+
+| Resource URI | Returns |
+|---|---|
+| `sdlc://validation` | Full `SDLC_VALIDATION.md` as `text/markdown` |
+| `sdlc://gates` | Gate status summary table as `text/plain` |
+
+### MCP prompts
+
+| Prompt | Purpose |
+|---|---|
+| `sdlc_protocol` | Section 0 protocol rules — inject into system prompt to activate gate enforcement |
+| `sdlc_session_start` | Session start message with cursor state + last session log |
+
+### Planned audit tools (v1.1.x–v1.2)
+| Tool | Priority | Why |
+|---|---|---|
+| `sdlc_verify_history` | High | Defense 2: detect state drift between history and actual codebase |
+| `sdlc_trace_requirements` | High | Map FR-x.y.z requirements to test coverage — differentiator nobody else has |
+| `sdlc_spec_compliance` | High | Catches code that passes tests but solves the wrong problem |
+| `sdlc_dispatch_wait` | Low | Likely already covered by polling `sdlc_dispatch_status` |
+| `sdlc_design_drift` | Low | UI/Figma drift detection — defer to v2.x |
+
+### Planned coding tools (v1.2)
 | Tool | Priority |
 |---|---|
-| `sdlc_stage_configure` | Set stage config: sub_agents, gate criteria, imports |
 | `sdlc_task_init` | Coding: create worktree, branch, task plan |
 | `sdlc_pr_describe` | Coding: generate PR description from task plan + diff |
 | `sdlc_post_merge` | Coding: update state + mark evidence stale on merge |
+| `sdlc_stage_configure` | Set stage config: sub_agents, gate criteria, imports |
 | `sdlc_audit --incremental` | CI: only re-verify stages with stale evidence |
 
 ---
@@ -233,7 +258,7 @@ sdlc-audit \
 | 6 | Language-agnostic stack profiles | Pending v1.x |
 | 7 | Privacy / data residency for API calls | Pending v1.x |
 | 8 | Cost predictability per project | Pending v1.x |
-| 9 | Framework upgrade path / migrations | **In progress** — `sdlc migrate` CLI plan written; `sdlc tag` CLI plan written |
+| 9 | Framework upgrade path / migrations | **Done** — `sdlc-migrate` + `sdlc-tag` CLIs shipped; 1.0.0→1.1.0 migration script exists; backup/rollback working |
 | 10 | Per-stage reviewer / sign-off authority | **Done** |
 | 11 | Skill freshness over time | Pending v2.x |
 | 12 | Non-code artifact verification | Pending v1.x |
@@ -303,15 +328,31 @@ sdlc-audit \
   - Session start: read `.sdlc-state.json` + `read_sdlc_section('18. Session Log')` only
   - Knowledge access rules: section-first reflex, never pre-load speculatively
 
-### v1.1.x (in progress — plan at docs/superpowers/plans/2026-05-20-sdlc-infrastructure-build.md)
-- `sdlc_dispatch_agents` + `sdlc_dispatch_status` MCP tools (Task 2)
-- `sdlc tag` CLI — apply region markers to SDLC_VALIDATION.md (Task 3)
-- `sdlc migrate` CLI — migration runner with backup/rollback (Task 4)
-- Root `.sdlc-state.json` stage configs for all 10 stages (Task 5)
-- Integration skill verification (Task 6)
-- Agent inventory documented: `sdlc-validate-inventory.md` (31 types, 5 categories)
+### v1.1.x (SHIPPED — plan at docs/superpowers/plans/2026-05-20-sdlc-infrastructure-build.md)
+- `sdlc_dispatch_agents` + `sdlc_dispatch_status` MCP tools
+- `sdlc-tag` CLI — apply region markers to SDLC_VALIDATION.md
+- `sdlc-migrate` CLI — migration runner with backup/rollback + `migration.ts` runner module
+- First migration script: `src/migrations/1.0.0-to-1.1.0.ts`
+- Root `.sdlc-state.json` stage configs for all 10 stages
+- Integration skills verified (all 116 clean against known MCP tool names)
+- MCP resources: `sdlc://validation` + `sdlc://gates`; prompts: `sdlc_protocol` + `sdlc_session_start`
+- Hooks: SessionStart (project identity + gate status) + Stop (session log)
+- 116 skills shipped vs design's 93 target
 
-### v1.2 (audit post-launch, after v1.1.x ships)
+### Overall completion estimate (2026-05-20): ~45%
+
+| Layer | Built | Remaining |
+|---|---|---|
+| State + integrity | ✓ | — |
+| MCP tool surface | 22/22 core + 5 planned (verify_history, trace_requirements, spec_compliance, + 2) | — |
+| CLI binaries | 5/5 | migration chain test |
+| Region markers + migration | ✓ | migration chain test needed |
+| Skills library | 116 (design: 93) | RABOS project overlay (12) |
+| Agent configs in state | 10 stages configured | — |
+| Production coding layer | 0% | v1.2 sprint |
+| External integrations | Skills exist (Playwright, Context7, Figma) | Runtime wiring |
+
+### v1.2 (next sprint — audit completion + coding layer MVP)
 - Coding layer MVP: address pre-launch items 1, 2, 4, 6, 9, 11, 12, 15, 20, 23
 - Architecture: git worktree per task + CI as merge gate + sdlc_post_merge hook
 - Key new tools: sdlc_task_init, sdlc_pr_describe, sdlc_post_merge
@@ -348,7 +389,9 @@ Full detail in `sdlc-validate-inventory.md`. Summary:
 
 **Key design principle:** 25 of 31 agents are verifiers, not creators. Orchestration lives in the state machine; agents do one thing each.
 
-**Implementation status:** Audit agent logic built (gate synthesis in MCP). All other categories designed, not yet implemented. Infrastructure plan at `docs/superpowers/plans/2026-05-20-sdlc-infrastructure-build.md`.
+**Architecture clarification (2026-05-20):** Agents are **project-defined data, not framework-shipped artifacts.** Each project's `.sdlc-state.json` defines its own sub-agent configurations per stage (agent IDs, namespaces, check descriptions, model assignments). The framework provides the dispatcher (`sdlc_dispatch_agents` + `sdlc_dispatch_status`) and the namespace pattern — projects fill in the specifics. The 31 agent types in this table are recommended configurations, not framework code.
+
+**Implementation status:** Gate synthesis logic built in MCP (`sdlc_agent_write` + `sdlc_gate_run`). All 10 stages configured with sub-agent specs in root `.sdlc-state.json`. Production coding agents (C1–C8) and quality enforcement agents (Q1–Q7) not yet wired — pending v1.2 coding layer. Infrastructure for dispatch (parallel run + status tracking) shipped.
 
 ---
 
@@ -363,10 +406,11 @@ Full detail in `sdlc-validate-inventory.md`. Summary:
 | `sdlc-mcp-server/src/cli.ts` | CI mode CLI binary (`sdlc-audit`) |
 | `sdlc-mcp-server/src/regions.ts` | Region parser/serializer for SDLC_VALIDATION.md |
 | `sdlc-mcp-server/src/template-generator.ts` | Section map (SECTION_MAP) for all stages |
-| `sdlc-mcp-server/src/dispatch.ts` | *(planned)* Dispatch record types + I/O |
-| `sdlc-mcp-server/src/tag.ts` | *(planned)* `sdlc-tag` CLI binary |
-| `sdlc-mcp-server/src/migrate.ts` | *(planned)* `sdlc-migrate` CLI binary |
-| `sdlc-mcp-server/migrations/` | *(planned)* Version migration scripts |
+| `sdlc-mcp-server/src/dispatch.ts` | Dispatch record types + `.sdlc-dispatch/` I/O |
+| `sdlc-mcp-server/src/tag.ts` | `sdlc-tag` CLI — apply region markers to SDLC_VALIDATION.md |
+| `sdlc-mcp-server/src/migrate.ts` | `sdlc-migrate` CLI — check/apply/rollback/list-backups |
+| `sdlc-mcp-server/src/migration.ts` | Migration runner + helpers (replaceFrameworkRegion, insertRegionAfter) |
+| `sdlc-mcp-server/src/migrations/1.0.0-to-1.1.0.ts` | First migration: insert SDLC:version marker |
 | `plugin/skills/sdlc-*.md` | Integration skills (dispatcher, superpowers, playwright, context7, figma, frontend-design) |
 | `sdlc-validate-inventory.md` | Agent inventory — 31 types, 5 categories, implementation status |
 | `sdlc-validate-design.md` | This document — consolidated design reference |
