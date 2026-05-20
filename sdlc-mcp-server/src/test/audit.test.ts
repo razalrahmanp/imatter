@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { buildHistoryVerifyReport } from "../audit.js";
 import { traceRequirementsInDoc } from "../audit.js";
 import type { GateStatus } from "../sdlc.js";
+import { ensureKey, signState } from "../integrity.js";
 
 function makeTempDir(): string {
   const dir = join(tmpdir(), `sdlc-audit-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
@@ -51,7 +52,7 @@ test("buildHistoryVerifyReport: throws if .sdlc-state.json does not exist", () =
   try {
     assert.throws(
       () => buildHistoryVerifyReport(dir),
-      /No .sdlc-state.json/,
+      /No \.sdlc-state\.json/,
     );
   } finally {
     cleanup(dir);
@@ -93,6 +94,39 @@ test("buildHistoryVerifyReport: ok:true with empty history and no key", () => {
   try {
     writeFileSync(join(dir, ".sdlc-state.json"), JSON.stringify(MINIMAL_STATE_NO_KEY), "utf-8");
     const report = buildHistoryVerifyReport(dir);
+    assert.equal(report.ok, true);
+    assert.equal(report.errors.length, 0);
+  } finally {
+    cleanup(dir);
+  }
+});
+
+test("buildHistoryVerifyReport: keyPresent:true and topLevel:valid when state is properly signed", () => {
+  const dir = makeTempDir();
+  try {
+    // Create the key
+    const key = ensureKey(dir);
+    assert.ok(key.length > 0, "ensureKey must return a non-empty key");
+
+    // Build and sign a minimal state
+    const stateObj = {
+      schema: "sdlc-state/1.1",
+      sdlc_framework_version: "1.1.0",
+      project_root: dir,
+      sdlc_file: dir + "/SDLC_VALIDATION.md",
+      cursor: { stage: 1, status: "in_progress", fail_count: 0, started_at: "2026-01-01T00:00:00.000Z" },
+      history: [],
+      stages: {},
+      flagged: [],
+      waivers: [],
+    };
+
+    const signed = signState(stateObj as unknown as Record<string, unknown>, dir);
+    writeFileSync(join(dir, ".sdlc-state.json"), JSON.stringify(signed), "utf-8");
+
+    const report = buildHistoryVerifyReport(dir);
+    assert.equal(report.keyPresent, true);
+    assert.equal(report.topLevel, "valid", "top-level HMAC must verify as valid");
     assert.equal(report.ok, true);
     assert.equal(report.errors.length, 0);
   } finally {

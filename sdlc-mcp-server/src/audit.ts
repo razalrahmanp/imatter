@@ -158,6 +158,7 @@ export function traceRequirementsInDoc(
   const pattern = new RegExp(escapeRegex(reqId), flags);
 
   // Split content into ## sections
+  // Content before the first ## heading (preamble) is intentionally excluded from search.
   const sections: { heading: string; startLine: number; lines: string[] }[] = [];
   let current: { heading: string; startLine: number; lines: string[] } | null = null;
 
