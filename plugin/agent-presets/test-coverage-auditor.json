@@ -1,0 +1,21 @@
+{
+  "$comment": "Preset for sdlc-test-coverage-auditor. Stage 4 (Testing Strategy). Runs the project's coverage command, parses output, compares against configured threshold.",
+  "stage": 4,
+  "sub_agent": {
+    "id": "test-coverage-auditor",
+    "type": "sdlc-test-coverage-auditor",
+    "model": "sonnet",
+    "ns": "test-coverage",
+    "description": "Executes coverage tooling and verifies threshold compliance."
+  },
+  "memory_key": "test-coverage",
+  "gate_contribution": {
+    "required_ns": ["test-coverage"],
+    "max_fail": 0,
+    "rationale": "Stage 4 requires evidence of coverage at the configured threshold. This auditor produces that evidence."
+  },
+  "notes": [
+    "This auditor runs the test suite via Bash — ensure the project has a runnable test:coverage script.",
+    "Combine with gate-evidence-collector for full criterion coverage on Stage 4."
+  ]
+}

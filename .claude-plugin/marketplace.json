@@ -26,6 +26,10 @@
         "./skills/"
       ],
 
+      "agents": [
+        "./agents/"
+      ],
+
       "mcpServers": {
         "sdlc-validation": {
           "command": "node",

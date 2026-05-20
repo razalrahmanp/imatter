@@ -1,0 +1,15 @@
+{
+  "$comment": "Preset for sdlc-gate-evidence-collector. Drop the sub_agent into stages.<N>.sub_agents[] and add the memory key. The collector reads gate criteria from SDLC_VALIDATION.md and returns file:line citations.",
+  "sub_agent": {
+    "id": "gate-evidence-collector",
+    "type": "sdlc-gate-evidence-collector",
+    "model": "haiku",
+    "ns": "gate-evidence",
+    "description": "Reads stage gate criteria and produces file:line citations for each."
+  },
+  "memory_key": "gate-evidence",
+  "gate_contribution": {
+    "required_ns": ["gate-evidence"],
+    "rationale": "No gate may pass without at least one citation-bearing finding. Add this preset to every stage."
+  }
+}

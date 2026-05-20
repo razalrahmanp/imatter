@@ -1,0 +1,21 @@
+{
+  "$comment": "Preset for sdlc-security-reviewer. Stage 8 (Security). Runs secret scan, auth flow validation, dependency audit, and OWASP top-10 endpoint checks.",
+  "stage": 8,
+  "sub_agent": {
+    "id": "security-reviewer",
+    "type": "sdlc-security-reviewer",
+    "model": "sonnet",
+    "ns": "security",
+    "description": "Four-check security audit producing a structured finding."
+  },
+  "memory_key": "security",
+  "gate_contribution": {
+    "required_ns": ["security"],
+    "max_fail": 0,
+    "rationale": "Stage 8 gate cannot pass with any unresolved critical security finding."
+  },
+  "notes": [
+    "Best combined with gate-evidence-collector and an organization-specific compliance agent (HIPAA, PCI, GDPR).",
+    "Run this preset on every PR that touches auth, secrets, or external endpoints — not only at Stage 8 gate."
+  ]
+}

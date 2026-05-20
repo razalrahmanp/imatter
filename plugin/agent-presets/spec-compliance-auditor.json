@@ -1,0 +1,17 @@
+{
+  "$comment": "Preset for sdlc-spec-compliance-auditor. Stage 1 (Inception & Requirements). Verifies spec docs have FR-IDs, quantified NFRs, scope boundaries, acceptance criteria, and personas.",
+  "stage": 1,
+  "sub_agent": {
+    "id": "spec-compliance-auditor",
+    "type": "sdlc-spec-compliance-auditor",
+    "model": "sonnet",
+    "ns": "spec-compliance",
+    "description": "Audits docs/spec.md for the five framework-required properties."
+  },
+  "memory_key": "spec-compliance",
+  "gate_contribution": {
+    "required_ns": ["spec-compliance"],
+    "max_fail": 0,
+    "rationale": "Stage 1 cannot pass without a compliant spec. This preset is the primary gate check."
+  }
+}
