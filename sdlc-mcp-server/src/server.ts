@@ -46,6 +46,7 @@ import {
   type Waiver,
   type PendingReview,
 } from "./state.js";
+import { buildHistoryVerifyReport, traceRequirementsInDoc } from "./audit.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -1835,6 +1836,139 @@ export function createServer(): McpServer {
         messages: [{ role: "user" as const, content: { type: "text" as const, text } }],
       };
     }
+  );
+
+  server.tool(
+    "sdlc_verify_history",
+    "Verify the cryptographic integrity of SDLC gate history. Checks HMAC signatures on every " +
+      "history entry, the cursor, and the top-level state file. Call when you suspect the state " +
+      "file may have been edited outside the tool or to audit gate records before a compliance review.",
+    { project_root: z.string().optional() },
+    async ({ project_root }) => {
+      try {
+        const root = resolveProjectRoot(project_root);
+        const report = buildHistoryVerifyReport(root);
+
+        const statusLine = report.ok
+          ? "✅ VERIFIED — no tampering detected"
+          : "❌ INTEGRITY VIOLATION — do not proceed until state is restored from git";
+
+        const keyLine = report.keyPresent
+          ? "Key: present"
+          : "Key: MISSING — state is unprotected (run sdlc_state_create to generate a key)";
+
+        const sigLine = `Top-level signature: ${report.topLevel}`;
+        const cursorLine = `Cursor HMAC: ${report.cursor}`;
+
+        const entryLines =
+          report.entries.length === 0
+            ? "  (no history entries)"
+            : report.entries
+                .map(
+                  (e) =>
+                    `  Stage ${e.stage} (${e.name}): gate=${e.gate} score=${e.score} ` +
+                    `hmac=${e.hmac} doc=${e.docHash} cleared=${e.cleared_at}`,
+                )
+                .join("\n");
+
+        const errorBlock =
+          report.errors.length > 0
+            ? `\n\nERRORS:\n${report.errors.map((e) => `  ⛔ ${e}`).join("\n")}`
+            : "";
+
+        const warnBlock =
+          report.warnings.length > 0
+            ? `\n\nWARNINGS:\n${report.warnings.map((w) => `  ⚠ ${w}`).join("\n")}`
+            : "";
+
+        const text =
+          `${statusLine}\n${keyLine} | ${sigLine} | ${cursorLine}\n\n` +
+          `History (${report.entries.length} entr${report.entries.length === 1 ? "y" : "ies"}):\n` +
+          entryLines + errorBlock + warnBlock;
+
+        return { content: [{ type: "text", text }], isError: !report.ok };
+      } catch (err) {
+        return { content: [{ type: "text", text: String(err) }], isError: true };
+      }
+    },
+  );
+
+  server.tool(
+    "sdlc_trace_requirements",
+    "Trace a requirement identifier through SDLC_VALIDATION.md and gate history. Shows every " +
+      "section that mentions the requirement and the gate status of each matched stage. " +
+      "Use to answer 'Has FR-1.2 been addressed in every relevant gate?'",
+    {
+      requirement_id: z
+        .string()
+        .describe("Requirement identifier to search for (e.g. 'FR-1.2', 'NFR-P-1', or any keyword)"),
+      project_root: z.string().optional(),
+      case_sensitive: z
+        .boolean()
+        .optional()
+        .describe("Case-sensitive search. Default false."),
+    },
+    async ({ requirement_id, project_root, case_sensitive }) => {
+      const isCaseSensitive = case_sensitive ?? false;
+      try {
+        const root = resolveProjectRoot(project_root);
+        const sdlcPath = findSdlcFile(root);
+        const content = readSdlcContent(sdlcPath);
+        const gateStatuses = getGateStatuses(content);
+
+        const matches = traceRequirementsInDoc(content, requirement_id, isCaseSensitive, gateStatuses);
+
+        if (matches.length === 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `"${requirement_id}" not found in any section of ${sdlcPath}.`,
+              },
+            ],
+          };
+        }
+
+        const lines: string[] = [
+          `Requirement trace: "${requirement_id}" — ${matches.length} section(s) with matches`,
+          `Source: ${sdlcPath}`,
+          "",
+        ];
+
+        for (const m of matches) {
+          const stageTag = m.stageNumber !== null ? ` [Stage ${m.stageNumber}]` : "";
+          const gateTag = m.gateStatus ? ` — gate: ${m.gateStatus}` : "";
+          lines.push(`### ${m.sectionHeading}${stageTag}${gateTag}`);
+          for (const h of m.hits) {
+            lines.push(`  L${h.line}: ${h.text}`);
+          }
+          lines.push("");
+        }
+
+        const stageMatches = matches.filter((m) => m.stageNumber !== null);
+        if (stageMatches.length > 0) {
+          const passed = stageMatches.filter(
+            (m) => m.gateStatus === "PASSED" || m.gateStatus === "ONGOING",
+          );
+          const unpassed = stageMatches.filter(
+            (m) => m.gateStatus !== "PASSED" && m.gateStatus !== "ONGOING",
+          );
+          lines.push(
+            `Coverage: ${stageMatches.length} stage(s) mention this requirement — ` +
+              `${passed.length} PASSED/ONGOING, ${unpassed.length} not yet passed`,
+          );
+          if (unpassed.length > 0) {
+            lines.push(
+              `Not yet passed: ${unpassed.map((m) => `Stage ${m.stageNumber}`).join(", ")}`,
+            );
+          }
+        }
+
+        return { content: [{ type: "text", text: lines.join("\n") }] };
+      } catch (err) {
+        return { content: [{ type: "text", text: String(err) }], isError: true };
+      }
+    },
   );
 
   return server;
