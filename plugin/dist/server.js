@@ -849,6 +849,7 @@ export function createServer() {
                     exports: Object.keys(parseFrontmatter(docAbsPath)["exports"] ?? {}),
                     score: result.score,
                     concerns: result.concerns,
+                    verified_with_framework_version: FRAMEWORK_VERSION,
                 });
                 // Advance cursor to next stage
                 state.cursor.stage = targetStage + 1;
@@ -964,6 +965,7 @@ export function createServer() {
                 exports: Object.keys(parseFrontmatter(docAbsPath)["exports"] ?? {}),
                 score: 0,
                 concerns: [`Waived: ${criterion_ns} — ${reason}`],
+                verified_with_framework_version: FRAMEWORK_VERSION,
             });
             state.cursor.stage = targetStage + 1;
             state.cursor.fail_count = 0;
@@ -1053,6 +1055,7 @@ export function createServer() {
                 exports: Object.keys(parseFrontmatter(docAbsPath)["exports"] ?? {}),
                 score: pending.gate_score,
                 concerns: pending.concerns,
+                verified_with_framework_version: FRAMEWORK_VERSION,
             });
             state.cursor.stage = targetStage + 1;
             state.cursor.fail_count = 0;

@@ -43,14 +43,32 @@ Each stage requires specific artifacts before the gate passes. A gate cannot be 
 
 ## Install
 
+> **This is a Claude Code plugin, not an npm package.**
+> `npm install -g sdlc-validation-plugin` will return a `404 Not Found` — nothing is published to the npm registry. Install it through the Claude Code marketplace as shown below.
+
+**Prerequisite:** Claude Code itself.
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
 **VS Code (Claude Code extension):**
 1. Type `/plugins` in the Claude Code chat
 2. Go to **Marketplaces** tab → Add: `https://github.com/razalrahmanp/imatter`
 3. Go to **Plugins** tab → find `sdlc-validation` → click **Install**
 
-**CLI (terminal):**
+**Claude Code CLI (terminal):** start a session in any folder and run these as chat messages:
 ```
 /plugin marketplace add https://github.com/razalrahmanp/imatter
+/plugin install sdlc-validation@sdlc-tools
+```
+
+**Local development (hacking on this repo):**
+```bash
+git clone https://github.com/razalrahmanp/imatter.git
+cd imatter
+claude
+# then inside the session:
+/plugin marketplace add ./.claude-plugin/marketplace.json
 /plugin install sdlc-validation@sdlc-tools
 ```
 

@@ -1,7 +1,0 @@
-{
-  "schema": "sdlc-stack/1.0",
-  "stack": "react-supabase-lambda",
-  "project_overlay": "rabos",
-  "compliance": [],
-  "skills_resolution_order": ["compliance", "project", "stack", "practice", "generic"]
-}

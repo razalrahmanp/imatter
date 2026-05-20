@@ -61,6 +61,7 @@ export interface HistoryEntry {
     exports: string[];
     score: number;
     concerns?: string[];
+    verified_with_framework_version?: string;
     hmac?: string;
 }
 export interface PendingSignoff {

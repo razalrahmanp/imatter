@@ -37,6 +37,17 @@
     ],
     "PostToolUse": [
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $cmd = $inp.tool_input.command; if ($cmd -match 'git\\s+commit' -and $cmd -notmatch 'Co-Authored-By') { Write-Output 'ATTRIBUTION: Add Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com> to this commit message.' }; exit 0",
+            "shell": "powershell",
+            "statusMessage": "Checking commit attribution..."
+          }
+        ]
+      },
+      {
         "matcher": "Write|Edit",
         "hooks": [
           {

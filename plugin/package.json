@@ -1,7 +1,22 @@
 {
   "name": "sdlc-validation-plugin",
   "version": "1.0.0",
+  "description": "MCP server + CI audit CLI for SDLC gate enforcement in Claude Code",
   "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "sdlc-mcp-server": "./dist/index.js",
+    "sdlc-audit": "./dist/cli.js",
+    "sdlc": "./dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "skills/",
+    "template/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
     "express": "^4.18.2",

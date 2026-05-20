@@ -71,6 +71,18 @@ If you find yourself wanting the full doc, pick the specific section instead.
 
 ---
 
+## AI attribution — always required
+
+Every commit made during a Claude Code session must include:
+
+```
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+```
+
+This applies to all commits, including single-line fixes. A PostToolUse hook will warn if a `git commit` command is missing this trailer. Never use `--no-verify` to bypass it.
+
+---
+
 ## End-of-session duty
 
 Before closing the session, append one line to **Section 18 (Session Log)** in the active SDLC_VALIDATION.md:
