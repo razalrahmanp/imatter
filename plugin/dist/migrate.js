@@ -281,6 +281,12 @@ function renderApplyResult(result) {
         lines.push(`Backup:        ${result.backupPath}`);
     lines.push("");
     lines.push(`Rollback within 30 days: sdlc-migrate --rollback`);
+    // Remind users to apply region markers after any migration to v1.1+
+    const needsTag = result.steps.some((s) => s.to === "1.1.0");
+    if (needsTag) {
+        lines.push("");
+        lines.push(`Next step: run \`sdlc-tag --force\` to apply full region markers to SDLC_VALIDATION.md`);
+    }
     return lines.join("\n");
 }
 // ── Main ──────────────────────────────────────────────────────────────────────

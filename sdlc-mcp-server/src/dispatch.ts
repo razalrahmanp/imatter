@@ -40,5 +40,7 @@ export function writeDispatch(projectRoot: string, record: DispatchRecord): void
 }
 
 export function makeDispatchId(stage: number): string {
-  return `d-${new Date().toISOString().slice(0, 10)}-stage${stage}`;
+  // Include time component to prevent same-day collisions when re-dispatching
+  const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+  return `d-${ts}-stage${stage}`;
 }
