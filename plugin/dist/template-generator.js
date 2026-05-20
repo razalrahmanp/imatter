@@ -1,6 +1,6 @@
 import { hashContent } from "./regions.js";
 // Keyed by the exact text after "## ", trimmed.
-const SECTION_MAP = {
+export const SECTION_MAP = {
     "0. Protocol Rules — Claude must read this first": {
         id: "protocol-rules",
         pattern: "framework",

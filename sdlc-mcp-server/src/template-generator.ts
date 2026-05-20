@@ -19,7 +19,7 @@ interface SectionDef {
 }
 
 // Keyed by the exact text after "## ", trimmed.
-const SECTION_MAP: Record<string, SectionDef> = {
+export const SECTION_MAP: Record<string, SectionDef> = {
   "0. Protocol Rules — Claude must read this first": {
     id: "protocol-rules",
     pattern: "framework",

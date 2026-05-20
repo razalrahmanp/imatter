@@ -1,3 +1,11 @@
+type SectionPattern = "framework" | "stage" | "log";
+interface SectionDef {
+    id: string;
+    pattern: SectionPattern;
+    since: string;
+    customId?: string;
+}
+export declare const SECTION_MAP: Record<string, SectionDef>;
 export type CanonicalRegistry = Map<string, {
     content: string;
     hash: string;
@@ -20,3 +28,4 @@ export declare function deserializeRegistry(json: string): {
     version: string;
     registry: CanonicalRegistry;
 };
+export {};

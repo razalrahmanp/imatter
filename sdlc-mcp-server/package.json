@@ -7,7 +7,9 @@
   "bin": {
     "sdlc-mcp-server": "dist/index.js",
     "sdlc": "dist/cli.js",
-    "sdlc-audit": "dist/cli.js"
+    "sdlc-audit": "dist/cli.js",
+    "sdlc-tag": "dist/tag.js",
+    "sdlc-migrate": "dist/migrate.js"
   },
   "scripts": {
     "build": "tsc",
