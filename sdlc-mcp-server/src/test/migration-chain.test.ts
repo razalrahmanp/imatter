@@ -1,12 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, rmSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { mkdirSync, rmSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { runMigrations } from "../migration.js";
 import { migration } from "../migrations/1.0.0-to-1.1.0.js";
-import { parseRegions } from "../regions.js";
-import { generateTaggedTemplate } from "../template-generator.js";
 
 // Normalize CRLF so fixture content matches what readSdlcContent returns
 const FIXTURE = readFileSync(
