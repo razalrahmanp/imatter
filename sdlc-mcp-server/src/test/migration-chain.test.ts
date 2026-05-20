@@ -250,6 +250,13 @@ test("pipeline: migrate then generateTaggedTemplate produces zero parse errors",
     const generated = generateTaggedTemplate(migrated.finalContent, "1.1.0");
     assert.ok(generated.tagged.length > 0, "tagged output must be non-empty");
 
+    // Must contain exactly one version marker — not two (bug guard for migrate→tag handoff)
+    assert.equal(
+      (generated.tagged.match(/<!-- SDLC:version/g) ?? []).length,
+      1,
+      "tagged output must contain exactly one version marker (not duplicated by generateTaggedTemplate)",
+    );
+
     // Step 3: parse the tagged output — must have zero errors
     const parsed = parseRegions(generated.tagged);
     assert.equal(

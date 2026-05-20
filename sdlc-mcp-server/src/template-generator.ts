@@ -243,10 +243,10 @@ export function generateTaggedTemplate(
     outParts.push(preamble.join("\n"));
   }
 
-  // Version marker — always the first line
+  // Strip any pre-existing SDLC:version marker from the preamble before inserting the canonical one.
+  // Needed when generateTaggedTemplate is called on already-migrated content.
+  const preambleStr = (outParts[0] ?? "").replace(/<!--\s*SDLC:version[^>]*-->\n?/g, "");
   const versionMarker = `<!-- SDLC:version "${version}" -->`;
-  // Insert after first line of preamble (the # title line)
-  const preambleStr = outParts[0] ?? "";
   const firstNewline = preambleStr.indexOf("\n");
   if (firstNewline !== -1) {
     outParts[0] =
@@ -254,6 +254,7 @@ export function generateTaggedTemplate(
       versionMarker + "\n" +
       preambleStr.slice(firstNewline + 1);
   } else {
+    outParts[0] = preambleStr;
     outParts.push(versionMarker);
   }
 
