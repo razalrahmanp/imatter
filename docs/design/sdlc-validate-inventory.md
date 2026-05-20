@@ -60,9 +60,21 @@ The design's "MCP tool `sdlc_trace_requirements`" was built as the **skill** `sd
 
 ### Gap vs. design
 
-- **Skills:** 21 built / 106 designed = **~20% built** (some built items are not in the designed inventory, since the designed inventory was RABOS-specific and the plugin shipping skills are framework-control + a starter set)
+- **Skills:** 61 built / 106 designed = **~58% built** (excluding L4 RABOS overlay which lives outside the plugin per design)
 - **MCP tools:** 20 built / 18 designed in the table below = the plugin has *more* tools built than the design table catalogs (the plugin grew organically beyond the original design)
 - **Sub-agents:** 0 built / 31 designed = **0% built**. This is the biggest gap. Plugin currently has no sub-agents at all.
+
+### Skills still designed but not built (~40 — by category)
+
+| Category | Remaining (designed not built) |
+|---|---|
+| L1 Generic | `slo-definition`, `e2e-test-pattern`, `test-fixture-design` |
+| L2 Tool/practice | `refactoring-safety`, `tech-debt-tracking`, `postmortem-blameless`, `oncall-handoff`, `readme-structure`, `changelog-pattern` |
+| L3 RABOS stack (react-supabase-lambda) | `supabase-migration`, `pgvector-pattern`, `postgres-partition`, `materialized-view`, `sqs-trigger`, `lambda-cold-start`, `eventbridge-pattern`, `step-function-pattern`, `bedrock-batch-inference`, `bedrock-tpm-management`, `agent-response-contract`, `react-component`, `react-data-fetching`, `react-state-management`, `react-error-boundary`, `serverless-yml-pattern`, `cloudfront-cache`, `cognito-jwt-validation` |
+| L4 RABOS overlay | All 10 — out of scope per design (lives outside open-source repo) |
+| L5 Compliance | All 19 — should be opt-in compliance packs, need module mechanism first |
+| L6 UI | `design-spec-jsonc`, `web-vitals`, `bundle-budget`, `motion-preference`, `design-drift-audit`, `visual-regression-pattern`, `react-design-tokens`, `react-aria-pattern`, `react-motion-library` |
+| L7 Compaction | Already built (`sdlc-compaction-checkpoint`) |
 
 ---
 
