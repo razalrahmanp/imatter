@@ -5,6 +5,7 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import { resolveProjectRoot, findSdlcFile, readSdlcContent, getGateStatuses, getSdlcSection, appendTableRow, artifactInfo, regenerateQuickReference, } from "./sdlc.js";
 import { ensureKey, acquireLock, releaseLock, fileHash } from "./integrity.js";
+import { readDispatch, writeDispatch, makeDispatchId, } from "./dispatch.js";
 import { FRAMEWORK_VERSION, readState, writeState, ensureSessionDir, parseFrontmatter, extractExport, runGateSynthesis, readTask, writeTask, taskDir, diagnoseError, } from "./state.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // ── Section 0 protocol rules shipped as a reusable constant ───────────────────
@@ -1322,6 +1323,113 @@ export function createServer() {
                     }],
                 isError: errorCount > 0,
             };
+        }
+        catch (err) {
+            return { content: [{ type: "text", text: String(err) }], isError: true };
+        }
+    });
+    server.tool("sdlc_dispatch_agents", "Create a dispatch record for the current stage's sub-agents. " +
+        "Returns a checklist of agents to run in parallel via the Agent tool. " +
+        "Each agent should call sdlc_agent_write when done. " +
+        "Call sdlc_dispatch_status to check progress, sdlc_gate_run when all have reported.", {
+        stage: z.number().int().optional().describe("Stage number. Defaults to cursor.stage."),
+        agent_ids: z
+            .array(z.string())
+            .optional()
+            .describe("Subset of sub_agent IDs to dispatch. Omit to dispatch all agents in stage config."),
+        project_root: z.string().optional(),
+    }, async ({ stage, agent_ids, project_root }) => {
+        try {
+            const root = resolveProjectRoot(project_root);
+            const state = readState(root);
+            const targetStage = stage ?? state.cursor.stage;
+            const stageKey = String(targetStage);
+            const stageConfig = state.stages[stageKey];
+            if (!stageConfig) {
+                return {
+                    content: [{ type: "text", text: `No stage config for Stage ${targetStage}. Add stages.${stageKey} to .sdlc-state.json first.` }],
+                    isError: true,
+                };
+            }
+            const agents = stageConfig.sub_agents
+                .filter((a) => !agent_ids || agent_ids.includes(a.id))
+                .map((a) => ({
+                ns: a.ns,
+                id: a.id,
+                check: a.check,
+                model: a.model,
+                status: "pending",
+            }));
+            if (agents.length === 0) {
+                return {
+                    content: [{ type: "text", text: "No matching agents found in stage config." }],
+                    isError: true,
+                };
+            }
+            const record = {
+                dispatch_id: makeDispatchId(targetStage),
+                stage: targetStage,
+                created_at: new Date().toISOString(),
+                agents,
+            };
+            writeDispatch(root, record);
+            const checklist = agents
+                .map((a) => `- [ ] **${a.id}** (${a.model}) ns="${a.ns}"\n  Check: ${a.check}`)
+                .join("\n");
+            return {
+                content: [{
+                        type: "text",
+                        text: `Dispatch created: ${record.dispatch_id}\n` +
+                            `Stage ${targetStage} — ${stageConfig.name}\n` +
+                            `${agents.length} agent(s) to run:\n\n${checklist}\n\n` +
+                            `Run these agents in parallel via the Agent tool.\n` +
+                            `Each agent must call sdlc_agent_write with ns, status, summary, and artifacts.\n` +
+                            `Then call sdlc_dispatch_status to check progress.`,
+                    }],
+            };
+        }
+        catch (err) {
+            return { content: [{ type: "text", text: String(err) }], isError: true };
+        }
+    });
+    server.tool("sdlc_dispatch_status", "Check how many sub-agents have reported for the current stage dispatch. " +
+        "Cross-references .sdlc-dispatch/ record with stage memory. " +
+        "Returns pending list and whether gate is ready to run.", {
+        stage: z.number().int().optional().describe("Stage number. Defaults to cursor.stage."),
+        project_root: z.string().optional(),
+    }, async ({ stage, project_root }) => {
+        try {
+            const root = resolveProjectRoot(project_root);
+            const state = readState(root);
+            const targetStage = stage ?? state.cursor.stage;
+            const stageKey = String(targetStage);
+            const stageConfig = state.stages[stageKey];
+            if (!stageConfig) {
+                return {
+                    content: [{ type: "text", text: `No stage config for Stage ${targetStage}.` }],
+                    isError: true,
+                };
+            }
+            const record = readDispatch(root, targetStage);
+            const reported = Object.entries(stageConfig.memory)
+                .filter(([, v]) => v !== null)
+                .map(([k]) => k);
+            const pending = Object.entries(stageConfig.memory)
+                .filter(([, v]) => v === null)
+                .map(([k]) => k);
+            const readyToRun = pending.length === 0;
+            const lines = [
+                `Stage ${targetStage} — ${stageConfig.name}`,
+                `Dispatch: ${record?.dispatch_id ?? "(no dispatch record)"}`,
+                ``,
+                `Reported (${reported.length}): ${reported.join(", ") || "none"}`,
+                `Pending  (${pending.length}): ${pending.join(", ") || "none"}`,
+                ``,
+                readyToRun
+                    ? `✓ All agents have reported. Call sdlc_gate_run to synthesize the verdict.`
+                    : `⏳ Waiting for: ${pending.join(", ")}`,
+            ];
+            return { content: [{ type: "text", text: lines.join("\n") }] };
         }
         catch (err) {
             return { content: [{ type: "text", text: String(err) }], isError: true };
