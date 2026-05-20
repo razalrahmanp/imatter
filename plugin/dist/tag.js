@@ -35,19 +35,26 @@ async function main() {
         process.stdout.write(`${sdlcPath} already has ${parsed.regions.length} region(s). Use --force to re-tag.\n`);
         process.exit(0);
     }
+    // Strip existing SDLC marker comments so --force produces a clean re-tag
+    const sdlcMarker = /^<!--\s*SDLC:/;
+    const sourceLines = force
+        ? lines.filter((l) => !sdlcMarker.test(l.trim()))
+        : lines;
     const out = [];
-    if (!lines.some((l) => l.includes("SDLC:version"))) {
+    if (!sourceLines.some((l) => l.includes("SDLC:version"))) {
         out.push(`<!-- SDLC:version "${FRAMEWORK_VERSION}" -->`);
     }
     let i = 0;
-    while (i < lines.length) {
-        const line = lines[i];
+    let matchedCount = 0;
+    while (i < sourceLines.length) {
+        const line = sourceLines[i];
         const headingMatch = line.match(/^##\s+(.+)$/);
         const sectionKey = headingMatch ? headingMatch[1].trim() : null;
         const sectionDef = sectionKey ? SECTION_MAP[sectionKey] : undefined;
         if (sectionDef) {
-            const end = sectionEnd(lines, i);
-            const sectionLines = lines.slice(i, end);
+            const end = sectionEnd(sourceLines, i);
+            const sectionLines = sourceLines.slice(i, end);
+            matchedCount++;
             const content = sectionLines.join("\n");
             const hash = hashContent(content);
             out.push(`<!-- SDLC:start type="framework" id="${sectionDef.id}" since="${sectionDef.since}" hash="${hash}" -->`);
@@ -66,15 +73,14 @@ async function main() {
     }
     const result = out.join("\n");
     if (dryRun) {
-        const taggedCount = Object.keys(SECTION_MAP).length;
         process.stdout.write(`[dry-run] Would write ${result.split("\n").length} lines to ${sdlcPath}\n`);
-        process.stdout.write(`Sections to tag: ${taggedCount}\n`);
+        process.stdout.write(`Sections to tag: ${matchedCount}\n`);
         process.exit(0);
     }
     copyFileSync(sdlcPath, sdlcPath + ".bak");
     writeFileSync(sdlcPath, result, "utf-8");
     process.stdout.write(`Tagged: ${sdlcPath}\n`);
-    process.stdout.write(`Sections tagged: ${Object.keys(SECTION_MAP).length}\n`);
+    process.stdout.write(`Sections tagged: ${matchedCount}\n`);
     process.stdout.write(`Backup: ${sdlcPath}.bak\n`);
 }
 main().catch((err) => {

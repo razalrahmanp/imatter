@@ -1,5 +1,5 @@
 # SDLC Validate — Consolidated Design Reference
-<!-- Updated: 2026-05-20. Source: sessions up to and including this one. -->
+<!-- Updated: 2026-05-20 (session 2). Source: all sessions to date. -->
 
 ---
 
@@ -96,6 +96,7 @@ GateResult.verdict: "PASS" | "CONCERNS" | "FAIL" | "BLOCKED" | "WAIVED" | "HUMAN
 Cursor.status: "in_progress" | "gate_failed" | "awaiting_review" | "pending_signoff"
 Cursor.pending_signoff?: { gate_verdict, gate_score, required_roles, requested_at }
 
+HistoryEntry.verified_with_framework_version?: string  // stamped on every new gate pass
 SdlcState.sdlc_framework_version: string  (FRAMEWORK_VERSION = "1.1.0")
 SdlcState.pending_review?: PendingReview   (set when reviewer signoff required)
 SdlcState._signature?: Signature           (HMAC chain — never edit manually)
@@ -124,11 +125,14 @@ SdlcState._signature?: Signature           (HMAC chain — never edit manually)
 | `sdlc_signoff` | Complete pending_signoff gate transition (human reviewer confirmation) |
 | `sdlc_doctor` | Diagnose: integrity, version, evidence staleness, lock, cursor |
 | `sdlc_task_checkpoint` | Flush writer iteration state to .sdlc-tasks/{id}.json |
-| `sdlc_stage_configure` | (planned) Set stage config: sub_agents, gate criteria, imports |
+| `sdlc_error_diagnose` | Classify raw compiler/linter/test output into structured DiagnosedError[] |
+| `sdlc_dispatch_agents` | Create dispatch record for stage sub-agents; returns parallel run checklist |
+| `sdlc_dispatch_status` | Check pending/reported counts; signals when gate is ready to run |
 
 ### Planned future tools
 | Tool | Priority |
 |---|---|
+| `sdlc_stage_configure` | Set stage config: sub_agents, gate criteria, imports |
 | `sdlc_task_init` | Coding: create worktree, branch, task plan |
 | `sdlc_pr_describe` | Coding: generate PR description from task plan + diff |
 | `sdlc_post_merge` | Coding: update state + mark evidence stale on merge |
@@ -229,7 +233,7 @@ sdlc-audit \
 | 6 | Language-agnostic stack profiles | Pending v1.x |
 | 7 | Privacy / data residency for API calls | Pending v1.x |
 | 8 | Cost predictability per project | Pending v1.x |
-| 9 | Framework upgrade path / migrations | Pending v1.x |
+| 9 | Framework upgrade path / migrations | **In progress** — `sdlc migrate` CLI plan written; `sdlc tag` CLI plan written |
 | 10 | Per-stage reviewer / sign-off authority | **Done** |
 | 11 | Skill freshness over time | Pending v2.x |
 | 12 | Non-code artifact verification | Pending v1.x |
@@ -291,17 +295,31 @@ sdlc-audit \
 - Per-stage reviewer signoff (sdlc_signoff tool)
 - sdlc_doctor diagnostic tool
 - Session log privacy (log_level: minimal/normal/verbose)
+- `sdlc_task_checkpoint` + `sdlc_error_diagnose` MCP tools
+- `regions.ts` — full region parser/serializer (framework/user/user-override/placeholder)
+- `template-generator.ts` — section map for all SDLC stages
+- `HistoryEntry.verified_with_framework_version` stamped on every gate pass
+- CLAUDE.md startup protocol: replaced full doc load (~19k tokens) with surgical reads (~3.5k tokens)
+  - Session start: read `.sdlc-state.json` + `read_sdlc_section('18. Session Log')` only
+  - Knowledge access rules: section-first reflex, never pre-load speculatively
 
-### v1.1.x (next: coding layer MVP)
-Address coding pre-launch items 1, 2, 4, 6, 9, 11, 12, 15, 20, 23 minimum.
-Architecture: git worktree per task + CI as merge gate + sdlc_post_merge hook.
-Key new tools: sdlc_task_init, sdlc_pr_describe, sdlc_post_merge.
-Key new agents: spec_compliance_verifier, plan_critic, migration_writer.
+### v1.1.x (in progress — plan at docs/superpowers/plans/2026-05-20-sdlc-infrastructure-build.md)
+- `sdlc_dispatch_agents` + `sdlc_dispatch_status` MCP tools (Task 2)
+- `sdlc tag` CLI — apply region markers to SDLC_VALIDATION.md (Task 3)
+- `sdlc migrate` CLI — migration runner with backup/rollback (Task 4)
+- Root `.sdlc-state.json` stage configs for all 10 stages (Task 5)
+- Integration skill verification (Task 6)
+- Agent inventory documented: `sdlc-validate-inventory.md` (31 types, 5 categories)
 
-### v1.2 (audit post-launch)
+### v1.2 (audit post-launch, after v1.1.x ships)
+- Coding layer MVP: address pre-launch items 1, 2, 4, 6, 9, 11, 12, 15, 20, 23
+- Architecture: git worktree per task + CI as merge gate + sdlc_post_merge hook
+- Key new tools: sdlc_task_init, sdlc_pr_describe, sdlc_post_merge
+- Key new agents: spec_compliance_verifier, plan_critic, migration_writer
+
+### v1.3 (audit post-launch)
 - Partial / incremental audits (#3)
 - Non-code artifact verification (#12)
-- Framework upgrade path (#9)
 - Cost predictability (#8)
 
 ### v2.x
@@ -313,7 +331,28 @@ Key new agents: spec_compliance_verifier, plan_critic, migration_writer.
 
 ---
 
-## 9. Key Files
+## 9. Agent Inventory
+
+Full detail in `sdlc-validate-inventory.md`. Summary:
+
+| Category | Count | Model | When |
+|---|---|---|---|
+| Audit (A1–A8) | 8 | Haiku + Sonnet | Every stage gate |
+| Production coding (C1–C8) | 8 | Sonnet | Every coding task |
+| Quality enforcement (Q1–Q7) | 7 | Sonnet | Runtime guards |
+| Integration (I1–I4) | 4 | Sonnet | Context7, Playwright, dispatcher, accessibility |
+| Lifecycle (L1–L4) | 4 | Sonnet | Release, migration, upgrade |
+| **Total** | **31** | | |
+
+**Model ratio:** ~8 Haiku · ~22 Sonnet · Opus only for gate-synthesizer conflict arbitration.
+
+**Key design principle:** 25 of 31 agents are verifiers, not creators. Orchestration lives in the state machine; agents do one thing each.
+
+**Implementation status:** Audit agent logic built (gate synthesis in MCP). All other categories designed, not yet implemented. Infrastructure plan at `docs/superpowers/plans/2026-05-20-sdlc-infrastructure-build.md`.
+
+---
+
+## 10. Key Files
 
 | Path | Purpose |
 |---|---|
@@ -321,11 +360,17 @@ Key new agents: spec_compliance_verifier, plan_critic, migration_writer.
 | `sdlc-mcp-server/src/state.ts` | All types, gate synthesis, state I/O |
 | `sdlc-mcp-server/src/sdlc.ts` | SDLC file parsing, QR regen |
 | `sdlc-mcp-server/src/server.ts` | All MCP tool handlers |
-| `sdlc-mcp-server/src/cli.ts` | CI mode CLI binary |
-| `practices/test-practice/skills/` | Skill registry root |
-| `practices/test-practice/scripts/validate-skills.js` | Skill frontmatter validator |
-| `practices/test-practice/scripts/generate-registry.js` | Registry index generator |
-| `practices/test-practice/skills/registry.json` | Machine-readable index (100 skills) |
+| `sdlc-mcp-server/src/cli.ts` | CI mode CLI binary (`sdlc-audit`) |
+| `sdlc-mcp-server/src/regions.ts` | Region parser/serializer for SDLC_VALIDATION.md |
+| `sdlc-mcp-server/src/template-generator.ts` | Section map (SECTION_MAP) for all stages |
+| `sdlc-mcp-server/src/dispatch.ts` | *(planned)* Dispatch record types + I/O |
+| `sdlc-mcp-server/src/tag.ts` | *(planned)* `sdlc-tag` CLI binary |
+| `sdlc-mcp-server/src/migrate.ts` | *(planned)* `sdlc-migrate` CLI binary |
+| `sdlc-mcp-server/migrations/` | *(planned)* Version migration scripts |
+| `plugin/skills/sdlc-*.md` | Integration skills (dispatcher, superpowers, playwright, context7, figma, frontend-design) |
+| `sdlc-validate-inventory.md` | Agent inventory — 31 types, 5 categories, implementation status |
+| `sdlc-validate-design.md` | This document — consolidated design reference |
+| `docs/superpowers/plans/2026-05-20-sdlc-infrastructure-build.md` | v1.1.x build plan |
 | `SDLC_VALIDATION.md` | Active project SDLC gate document |
 | `.sdlc-state.json` | Live gate state (HMAC-signed, do not edit) |
 | `.sdlc/keys/state.key` | HMAC key (gitignored, machine-local) |

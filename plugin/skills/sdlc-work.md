@@ -1,5 +1,6 @@
 ---
-description: Guide the user through a specific SDLC stage — checks the gate, asks targeted questions one at a time, creates required artifacts, and shows gate evidence
+name: sdlc-work
+description: Use when the user wants to advance an SDLC stage, build the required artifacts for a stage, or asks "let's work on stage N" — checks prerequisite gate, asks one question at a time, creates artifacts.
 ---
 
 You will be given a stage number: $ARGUMENTS

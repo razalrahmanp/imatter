@@ -1,5 +1,6 @@
 ---
-description: Check whether a specific SDLC stage gate is PASSED before writing code
+name: sdlc-gate
+description: Use when about to write code for an SDLC stage, or when the user asks about a gate's status — checks whether the gate is PASSED and lists missing artifacts if not.
 ---
 
 You will be given a stage number $ARGUMENTS.

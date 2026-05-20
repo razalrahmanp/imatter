@@ -1,5 +1,6 @@
 ---
-description: Load the full SDLC_VALIDATION.md into context when you need to reference multiple sections at once
+name: sdlc-load
+description: Use when auditing the full SDLC document, cross-referencing multiple stage sections, or when the user explicitly asks to load the whole framework — otherwise prefer targeted section reads.
 ---
 
 Call `load_sdlc_context` with `project_root` set to the current working directory.

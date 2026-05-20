@@ -1,0 +1,73 @@
+{
+  "schema": "sdlc-state/1.1",
+  "sdlc_framework_version": "1.1.0",
+  "project_root": "g:\\PROJECT\\Learning Projects",
+  "sdlc_file": "g:\\PROJECT\\Learning Projects\\SDLC_VALIDATION.md",
+  "cursor": {
+    "stage": 1,
+    "status": "in_progress",
+    "fail_count": 0,
+    "started_at": "2026-05-20T00:00:00.000Z"
+  },
+  "history": [],
+  "stages": {
+    "4": {
+      "name": "Testing Strategy",
+      "sdlc_heading": "5. Stage 4 — Testing Strategy",
+      "imports": [
+        { "stage": 3, "key": "linter_config" }
+      ],
+      "sub_agents": [
+        { "id": "test-runner-checker", "check": "Jest config and test script in package.json", "model": "haiku", "ns": "test_runner" },
+        { "id": "test-files-checker",  "check": "Test files exist for high-risk modules (orders, payments, auth)", "model": "haiku", "ns": "test_files" },
+        { "id": "coverage-checker",    "check": "Coverage config and threshold enforcement", "model": "haiku", "ns": "coverage" },
+        { "id": "ci-gate-checker",     "check": "Tests run in CI and gate merges on failure", "model": "sonnet", "ns": "ci_gate" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "test_runner", "must": "pass" },
+          { "ns": "test_files",  "must": "pass" },
+          { "ns": "coverage",    "must": "pass_or_acknowledge" },
+          { "ns": "ci_gate",     "must": "pass" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": {
+        "test_runner": null,
+        "test_files":  null,
+        "coverage":    null,
+        "ci_gate":     null
+      }
+    },
+    "5": {
+      "name": "Build & Continuous Integration",
+      "sdlc_heading": "6. Stage 5 — Build & Continuous Integration",
+      "imports": [
+        { "stage": 3, "key": "branch_strategy" },
+        { "stage": 4, "key": "ci_test_command" }
+      ],
+      "sub_agents": [
+        { "id": "ci-config-checker",  "check": "CI config file exists and runs on PRs", "model": "haiku", "ns": "ci_config" },
+        { "id": "build-gate-checker", "check": "Type-check and lint gate merges in CI", "model": "haiku", "ns": "build_gate" },
+        { "id": "artifact-checker",   "check": "Build artifacts versioned and traceable", "model": "haiku", "ns": "artifacts" }
+      ],
+      "gate": {
+        "rule": "all_criteria_met",
+        "criteria": [
+          { "ns": "ci_config",  "must": "pass" },
+          { "ns": "build_gate", "must": "pass" },
+          { "ns": "artifacts",  "must": "pass_or_acknowledge" }
+        ],
+        "conflict_threshold": 2
+      },
+      "memory": {
+        "ci_config":  null,
+        "build_gate": null,
+        "artifacts":  null
+      }
+    }
+  },
+  "flagged": [],
+  "waivers": []
+}

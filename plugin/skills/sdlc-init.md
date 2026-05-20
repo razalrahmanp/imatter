@@ -1,5 +1,6 @@
 ---
-description: Initialize a new project — copies the SDLC template and guides the user through structured questions to complete Section 1 and Stage 1 artifacts
+name: sdlc-init
+description: Use when starting a new project that needs SDLC enforcement, or when the user asks to set up SDLC for the current repo — copies the template and guides through Stage 1 setup.
 ---
 
 Step 1 — Copy template

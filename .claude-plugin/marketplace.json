@@ -9,7 +9,7 @@
       "name": "sdlc-validation",
       "source": "./plugin",
       "description": "SDLC validation enforcement — auto-loads your SDLC_VALIDATION.md at every session start, enforces 10-stage gate checks, and blocks Claude from writing code until the correct gate is PASSED.",
-      "version": "1.3.1",
+      "version": "1.4.0",
       "author": {
         "name": "razalrahmanp"
       },
@@ -19,6 +19,10 @@
       "category": "productivity",
 
       "commands": [
+        "./skills/"
+      ],
+
+      "skills": [
         "./skills/"
       ],
 
