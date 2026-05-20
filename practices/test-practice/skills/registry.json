@@ -1,0 +1,3181 @@
+{
+  "schema": "skill-registry/1.0",
+  "generated_at": "2026-05-20T10:18:40.148Z",
+  "count": 100,
+  "skills": [
+    {
+      "id": "accessibility-eu",
+      "title": "EU Accessibility Act — gate criteria for products sold in the EU",
+      "layer": "compliance",
+      "file": "compliance/accessibility-eu/accessibility-eu.md",
+      "tags": [
+        "eu-accessibility-act",
+        "wcag",
+        "compliance",
+        "eaa",
+        "en-301-549",
+        "legal"
+      ],
+      "applies_to": {
+        "task_types": [
+          "audit",
+          "compliance-check"
+        ],
+        "stages": [
+          8
+        ]
+      },
+      "size_tokens": 240,
+      "related": [
+        "wcag-2-1-aa",
+        "accessibility-us",
+        "accessibility-wcag"
+      ],
+      "compliance_module": "accessibility-eu"
+    },
+    {
+      "id": "accessibility-us",
+      "title": "ADA Title III — gate criteria for US consumer-facing web products",
+      "layer": "compliance",
+      "file": "compliance/accessibility-us/accessibility-us.md",
+      "tags": [
+        "ada",
+        "title-iii",
+        "wcag",
+        "compliance",
+        "accessibility",
+        "us",
+        "legal"
+      ],
+      "applies_to": {
+        "task_types": [
+          "audit",
+          "compliance-check"
+        ],
+        "stages": [
+          8
+        ]
+      },
+      "size_tokens": 230,
+      "related": [
+        "wcag-2-1-aa",
+        "accessibility-eu",
+        "accessibility-wcag"
+      ],
+      "compliance_module": "accessibility-us"
+    },
+    {
+      "id": "ai-human-oversight",
+      "title": "EU AI Act human oversight — Article 14 stop/override for high-risk AI",
+      "layer": "compliance",
+      "file": "compliance/eu-ai-act/ai-human-oversight.md",
+      "tags": [
+        "eu-ai-act",
+        "human-oversight",
+        "article-14",
+        "high-risk",
+        "override",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-feature",
+          "add-worker",
+          "add-handler",
+          "add-component"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 205,
+      "related": [
+        "ai-risk-classification",
+        "ai-system-logging",
+        "ai-transparency-disclosure"
+      ],
+      "compliance_module": "eu-ai-act"
+    },
+    {
+      "id": "ai-risk-classification",
+      "title": "EU AI Act risk classification — prohibited / high-risk / limited / minimal",
+      "layer": "compliance",
+      "file": "compliance/eu-ai-act/ai-risk-classification.md",
+      "tags": [
+        "eu-ai-act",
+        "risk-classification",
+        "high-risk",
+        "prohibited",
+        "compliance",
+        "ai"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-feature",
+          "add-worker",
+          "add-integration"
+        ],
+        "stages": [
+          1,
+          2,
+          6
+        ]
+      },
+      "size_tokens": 215,
+      "related": [
+        "ai-transparency-disclosure",
+        "ai-system-logging",
+        "ai-human-oversight"
+      ],
+      "compliance_module": "eu-ai-act"
+    },
+    {
+      "id": "ai-system-logging",
+      "title": "EU AI Act AI system logging — Article 12 automatic logs for high-risk systems",
+      "layer": "compliance",
+      "file": "compliance/eu-ai-act/ai-system-logging.md",
+      "tags": [
+        "eu-ai-act",
+        "logging",
+        "high-risk",
+        "article-12",
+        "audit-trail",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "add-handler",
+          "add-integration"
+        ],
+        "stages": [
+          5,
+          7,
+          10
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "ai-risk-classification",
+        "ai-human-oversight",
+        "structured-logging",
+        "audit-logging"
+      ],
+      "compliance_module": "eu-ai-act"
+    },
+    {
+      "id": "ai-transparency-disclosure",
+      "title": "EU AI Act transparency disclosure — chatbot, synthetic content, emotion recognition",
+      "layer": "compliance",
+      "file": "compliance/eu-ai-act/ai-transparency-disclosure.md",
+      "tags": [
+        "eu-ai-act",
+        "transparency",
+        "disclosure",
+        "chatbot",
+        "synthetic-content",
+        "article-50",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-handler",
+          "add-feature"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "ai-risk-classification",
+        "ai-system-logging",
+        "ai-human-oversight"
+      ],
+      "compliance_module": "eu-ai-act"
+    },
+    {
+      "id": "consent-management",
+      "title": "GDPR consent management — collection, withdrawal, audit trail",
+      "layer": "compliance",
+      "file": "compliance/gdpr/consent-management.md",
+      "tags": [
+        "gdpr",
+        "consent",
+        "lawful-basis",
+        "withdrawal",
+        "audit",
+        "article-7",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "add-form",
+          "add-component"
+        ],
+        "stages": [
+          3,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "data-subject-rights",
+        "pii-handling",
+        "audit-logging"
+      ],
+      "compliance_module": "gdpr"
+    },
+    {
+      "id": "cross-border-transfer",
+      "title": "GDPR cross-border transfer — SCCs, adequacy decisions, transfer impact assessment",
+      "layer": "compliance",
+      "file": "compliance/gdpr/cross-border-transfer.md",
+      "tags": [
+        "gdpr",
+        "cross-border",
+        "sccs",
+        "adequacy",
+        "chapter-v",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-integration",
+          "add-vendor",
+          "add-worker"
+        ],
+        "stages": [
+          2,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "dpa-pattern",
+        "data-subject-rights"
+      ],
+      "compliance_module": "gdpr"
+    },
+    {
+      "id": "data-subject-rights",
+      "title": "GDPR data subject rights — access, erasure, portability, rectification",
+      "layer": "compliance",
+      "file": "compliance/gdpr/data-subject-rights.md",
+      "tags": [
+        "gdpr",
+        "privacy",
+        "data-subject",
+        "erasure",
+        "portability",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "modify-handler"
+        ],
+        "stages": [
+          6,
+          10
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "pii-handling",
+        "audit-logging",
+        "data-retention"
+      ],
+      "compliance_module": "gdpr"
+    },
+    {
+      "id": "dpa-pattern",
+      "title": "GDPR DPA pattern — controller/processor contracts, Article 28 clauses",
+      "layer": "compliance",
+      "file": "compliance/gdpr/dpa-pattern.md",
+      "tags": [
+        "gdpr",
+        "dpa",
+        "processor",
+        "controller",
+        "article-28",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-integration",
+          "add-vendor",
+          "add-worker"
+        ],
+        "stages": [
+          2,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 215,
+      "related": [
+        "data-subject-rights",
+        "cross-border-transfer",
+        "audit-logging"
+      ],
+      "compliance_module": "gdpr"
+    },
+    {
+      "id": "baa-pattern",
+      "title": "HIPAA BAA pattern — Business Associate Agreement requirements, vendor checklist",
+      "layer": "compliance",
+      "file": "compliance/hipaa/baa-pattern.md",
+      "tags": [
+        "hipaa",
+        "baa",
+        "business-associate",
+        "vendor",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-integration",
+          "add-vendor"
+        ],
+        "stages": [
+          2,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "phi-handling",
+        "phi-access-logging",
+        "breach-notification"
+      ],
+      "compliance_module": "hipaa"
+    },
+    {
+      "id": "breach-notification",
+      "title": "HIPAA breach notification — 60-day timeline, HHS, affected individuals, media",
+      "layer": "compliance",
+      "file": "compliance/hipaa/breach-notification.md",
+      "tags": [
+        "hipaa",
+        "breach",
+        "notification",
+        "60-day",
+        "hhs",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-monitoring",
+          "add-worker"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "phi-handling",
+        "phi-access-logging",
+        "baa-pattern",
+        "incident-evidence"
+      ],
+      "compliance_module": "hipaa"
+    },
+    {
+      "id": "phi-access-logging",
+      "title": "HIPAA PHI access logging — 45 CFR §164.312(b) audit controls, 6-year retention",
+      "layer": "compliance",
+      "file": "compliance/hipaa/phi-access-logging.md",
+      "tags": [
+        "hipaa",
+        "phi",
+        "audit-logging",
+        "access-log",
+        164312,
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "add-worker"
+        ],
+        "stages": [
+          5,
+          6,
+          7,
+          10
+        ]
+      },
+      "size_tokens": 205,
+      "related": [
+        "phi-handling",
+        "baa-pattern",
+        "breach-notification",
+        "structured-logging"
+      ],
+      "compliance_module": "hipaa"
+    },
+    {
+      "id": "phi-handling",
+      "title": "HIPAA PHI handling — 18 identifiers, safe harbor de-identification, minimum necessary",
+      "layer": "compliance",
+      "file": "compliance/hipaa/phi-handling.md",
+      "tags": [
+        "hipaa",
+        "phi",
+        "de-identification",
+        "safe-harbor",
+        "minimum-necessary",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "add-worker",
+          "add-integration"
+        ],
+        "stages": [
+          2,
+          3,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 215,
+      "related": [
+        "phi-access-logging",
+        "baa-pattern",
+        "breach-notification",
+        "pii-handling"
+      ],
+      "compliance_module": "hipaa"
+    },
+    {
+      "id": "card-data-tokenization",
+      "title": "PCI DSS tokenization — no raw PANs, Razorpay token flow, scope reduction",
+      "layer": "compliance",
+      "file": "compliance/pci-dss/card-data-tokenization.md",
+      "tags": [
+        "pci-dss",
+        "tokenization",
+        "pan",
+        "razorpay",
+        "card-data",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 215,
+      "related": [
+        "pan-truncation",
+        "pci-scope-reduction",
+        "pci-network-segmentation"
+      ],
+      "compliance_module": "pci-dss"
+    },
+    {
+      "id": "pan-truncation",
+      "title": "PCI DSS PAN truncation — display rules, masking, storage limits",
+      "layer": "compliance",
+      "file": "compliance/pci-dss/pan-truncation.md",
+      "tags": [
+        "pci-dss",
+        "pan",
+        "truncation",
+        "masking",
+        "display",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-handler",
+          "add-endpoint"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "card-data-tokenization",
+        "pci-scope-reduction"
+      ],
+      "compliance_module": "pci-dss"
+    },
+    {
+      "id": "pci-network-segmentation",
+      "title": "PCI DSS network segmentation — CDE isolation, firewall rules, AWS VPC pattern",
+      "layer": "compliance",
+      "file": "compliance/pci-dss/pci-network-segmentation.md",
+      "tags": [
+        "pci-dss",
+        "network-segmentation",
+        "vpc",
+        "firewall",
+        "cde",
+        "aws",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-integration",
+          "add-worker",
+          "deploy"
+        ],
+        "stages": [
+          2,
+          7,
+          10
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "pci-scope-reduction",
+        "card-data-tokenization",
+        "pan-truncation"
+      ],
+      "compliance_module": "pci-dss"
+    },
+    {
+      "id": "pci-scope-reduction",
+      "title": "PCI DSS scope reduction — isolate CDE, minimize in-scope systems",
+      "layer": "compliance",
+      "file": "compliance/pci-dss/pci-scope-reduction.md",
+      "tags": [
+        "pci-dss",
+        "scope-reduction",
+        "cde",
+        "segmentation",
+        "tokenization",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-integration",
+          "add-feature",
+          "add-worker"
+        ],
+        "stages": [
+          1,
+          2,
+          6,
+          10
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "card-data-tokenization",
+        "pan-truncation",
+        "pci-network-segmentation"
+      ],
+      "compliance_module": "pci-dss"
+    },
+    {
+      "id": "access-review-pattern",
+      "title": "SOC 2 access review — CC6.3 quarterly review, de-provisioning, evidence",
+      "layer": "compliance",
+      "file": "compliance/soc2/access-review-pattern.md",
+      "tags": [
+        "soc2",
+        "access-review",
+        "cc6",
+        "de-provisioning",
+        "principle-of-least-privilege",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-admin",
+          "add-worker",
+          "modify-handler"
+        ],
+        "stages": [
+          6,
+          10
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "change-management-evidence",
+        "incident-evidence",
+        "audit-logging"
+      ],
+      "compliance_module": "soc2"
+    },
+    {
+      "id": "change-management-evidence",
+      "title": "SOC 2 change management evidence — CC8.1 approval, testing, deployment artifacts",
+      "layer": "compliance",
+      "file": "compliance/soc2/change-management-evidence.md",
+      "tags": [
+        "soc2",
+        "change-management",
+        "cc8",
+        "evidence",
+        "audit",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-feature",
+          "modify-handler",
+          "schema-migration",
+          "deploy"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 205,
+      "related": [
+        "access-review-pattern",
+        "incident-evidence",
+        "audit-logging"
+      ],
+      "compliance_module": "soc2"
+    },
+    {
+      "id": "incident-evidence",
+      "title": "SOC 2 incident evidence — CC7.3/CC7.4 logging, timeline, resolution record",
+      "layer": "compliance",
+      "file": "compliance/soc2/incident-evidence.md",
+      "tags": [
+        "soc2",
+        "incident",
+        "cc7",
+        "evidence",
+        "timeline",
+        "postmortem",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "add-handler",
+          "add-monitoring"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "change-management-evidence",
+        "access-review-pattern",
+        "structured-logging"
+      ],
+      "compliance_module": "soc2"
+    },
+    {
+      "id": "wcag-2-1-aa",
+      "title": "WCAG 2.1 AA — gate criteria for web accessibility compliance",
+      "layer": "compliance",
+      "file": "compliance/wcag-2-1-aa/wcag-2-1-aa.md",
+      "tags": [
+        "wcag",
+        "accessibility",
+        "compliance",
+        "a11y",
+        "stage-4",
+        "stage-8"
+      ],
+      "applies_to": {
+        "task_types": [
+          "audit",
+          "compliance-check"
+        ],
+        "stages": [
+          4,
+          8
+        ]
+      },
+      "size_tokens": 280,
+      "related": [
+        "accessibility-wcag",
+        "accessibility-eu",
+        "accessibility-us",
+        "motion-preference"
+      ],
+      "compliance_module": "wcag-2-1-aa"
+    },
+    {
+      "id": "accessibility-wcag",
+      "title": "Accessibility — WCAG 2.1 AA checklist for web UI",
+      "layer": "generic",
+      "file": "generic/accessibility-wcag.md",
+      "tags": [
+        "accessibility",
+        "wcag",
+        "aria",
+        "keyboard",
+        "contrast",
+        "a11y",
+        "compliance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "add-ui",
+          "modify-component"
+        ],
+        "stages": [
+          4,
+          8
+        ]
+      },
+      "size_tokens": 290,
+      "related": [
+        "react-aria-pattern",
+        "motion-preference",
+        "design-system-tokens"
+      ]
+    },
+    {
+      "id": "api-endpoint-design",
+      "title": "API endpoint — JWT, request/response shape, error envelope",
+      "layer": "generic",
+      "file": "generic/api-endpoint-design.md",
+      "tags": [
+        "api",
+        "jwt",
+        "auth",
+        "validation",
+        "http",
+        "rest"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "modify-endpoint",
+          "add-handler",
+          "add-route"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 260,
+      "related": [
+        "authn-pattern",
+        "input-validation",
+        "structured-logging"
+      ]
+    },
+    {
+      "id": "api-versioning",
+      "title": "API versioning — URL path versioning, deprecation headers, sunset policy",
+      "layer": "generic",
+      "file": "generic/api-versioning.md",
+      "tags": [
+        "api",
+        "versioning",
+        "deprecation",
+        "backward-compatibility",
+        "rest"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "modify-handler"
+        ],
+        "stages": [
+          3,
+          5,
+          7
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "api-endpoint-design",
+        "changelog-pattern",
+        "api-doc-pattern"
+      ]
+    },
+    {
+      "id": "authn-pattern",
+      "title": "Authentication pattern — JWT bearer tokens, session validation, 401 vs 403",
+      "layer": "generic",
+      "file": "generic/authn-pattern.md",
+      "tags": [
+        "authentication",
+        "jwt",
+        "bearer-token",
+        "session",
+        "authorization"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "modify-handler"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "cognito-jwt-validation",
+        "input-validation",
+        "error-handling",
+        "structured-logging"
+      ]
+    },
+    {
+      "id": "background-job",
+      "title": "Background job — async processing, fan-out, progress tracking, failure handling",
+      "layer": "generic",
+      "file": "generic/background-job.md",
+      "tags": [
+        "background-job",
+        "async",
+        "worker",
+        "queue",
+        "fan-out",
+        "reliability"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "add-handler"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "sqs-trigger",
+        "idempotency",
+        "error-handling",
+        "structured-logging"
+      ]
+    },
+    {
+      "id": "bundle-budget",
+      "title": "Bundle budget — JS size limits per route enforced in CI",
+      "layer": "generic",
+      "file": "generic/bundle-budget.md",
+      "tags": [
+        "performance",
+        "bundle",
+        "webpack",
+        "next-js",
+        "tree-shaking",
+        "ci"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "add-dependency"
+        ],
+        "stages": [
+          5,
+          9
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "web-vitals",
+        "react-design-tokens"
+      ]
+    },
+    {
+      "id": "caching-strategy",
+      "title": "Caching strategy — CDN, in-process, distributed cache layers",
+      "layer": "generic",
+      "file": "generic/caching-strategy.md",
+      "tags": [
+        "caching",
+        "performance",
+        "cdn",
+        "redis",
+        "ttl",
+        "invalidation"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-worker",
+          "optimize-endpoint",
+          "add-cache"
+        ],
+        "stages": [
+          9
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "api-endpoint-design",
+        "graceful-degradation",
+        "slo-definition"
+      ]
+    },
+    {
+      "id": "circuit-breaker",
+      "title": "Circuit breaker — open/half-open/closed, failure threshold, fallback response",
+      "layer": "generic",
+      "file": "generic/circuit-breaker.md",
+      "tags": [
+        "circuit-breaker",
+        "resilience",
+        "reliability",
+        "external-api",
+        "fault-tolerance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-worker",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "retry-pattern",
+        "error-handling",
+        "caching-strategy",
+        "structured-logging"
+      ]
+    },
+    {
+      "id": "data-modeling",
+      "title": "Data modeling — UUIDs, timestamps, soft delete, audit columns",
+      "layer": "generic",
+      "file": "generic/data-modeling.md",
+      "tags": [
+        "data-modeling",
+        "postgres",
+        "sql",
+        "uuid",
+        "soft-delete",
+        "audit-trail"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-table",
+          "schema-migration",
+          "add-handler"
+        ],
+        "stages": [
+          2,
+          4
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "rds-query",
+        "schema-migration",
+        "audit-logging",
+        "supabase-migration"
+      ]
+    },
+    {
+      "id": "design-spec-jsonc",
+      "title": "Design spec — JSONC format for version-controlled UI intent",
+      "layer": "generic",
+      "file": "generic/design-spec-jsonc.md",
+      "tags": [
+        "ui",
+        "design",
+        "spec",
+        "jsonc",
+        "tokens",
+        "figma-alternative"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "add-ui",
+          "design-system"
+        ],
+        "stages": [
+          1,
+          2,
+          3
+        ]
+      },
+      "size_tokens": 310,
+      "related": [
+        "design-system-tokens",
+        "react-design-tokens",
+        "accessibility-wcag"
+      ]
+    },
+    {
+      "id": "design-system-tokens",
+      "title": "Design system tokens — naming, scale, CSS variables, theming",
+      "layer": "generic",
+      "file": "generic/design-system-tokens.md",
+      "tags": [
+        "design-system",
+        "tokens",
+        "css-variables",
+        "tailwind",
+        "theming",
+        "dark-mode"
+      ],
+      "applies_to": {
+        "task_types": [
+          "design-system",
+          "add-component",
+          "add-page"
+        ],
+        "stages": [
+          2,
+          3
+        ]
+      },
+      "size_tokens": 240,
+      "related": [
+        "react-design-tokens",
+        "design-spec-jsonc",
+        "rabos-brand-system"
+      ]
+    },
+    {
+      "id": "environment-config",
+      "title": "Environment config — 12-factor, .env.example, stage-aware, no defaults for secrets",
+      "layer": "generic",
+      "file": "generic/environment-config.md",
+      "tags": [
+        "configuration",
+        "environment-variables",
+        "12-factor",
+        "dotenv",
+        "deployment"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-integration",
+          "deploy",
+          "any"
+        ],
+        "stages": [
+          2,
+          5,
+          7
+        ]
+      },
+      "size_tokens": 190,
+      "related": [
+        "secrets-management",
+        "serverless-yml-pattern",
+        "structured-logging"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "title": "Error handling — typed errors, never swallow, log once, propagate context",
+      "layer": "generic",
+      "file": "generic/error-handling.md",
+      "tags": [
+        "error-handling",
+        "typescript",
+        "logging",
+        "exceptions",
+        "reliability"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "add-worker",
+          "any"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "structured-logging",
+        "input-validation",
+        "api-endpoint-design"
+      ]
+    },
+    {
+      "id": "health-check",
+      "title": "Health check — liveness vs readiness, dependency checks, structured response",
+      "layer": "generic",
+      "file": "generic/health-check.md",
+      "tags": [
+        "health-check",
+        "liveness",
+        "readiness",
+        "monitoring",
+        "kubernetes",
+        "ecs"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "deploy"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 185,
+      "related": [
+        "structured-logging",
+        "error-handling",
+        "runbook-pattern"
+      ]
+    },
+    {
+      "id": "idempotency",
+      "title": "Idempotency — idempotency keys, dedup table, at-least-once safe handlers",
+      "layer": "generic",
+      "file": "generic/idempotency.md",
+      "tags": [
+        "idempotency",
+        "reliability",
+        "at-least-once",
+        "dedup",
+        "distributed-systems"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "add-worker"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 205,
+      "related": [
+        "error-handling",
+        "retry-pattern",
+        "sqs-trigger",
+        "eventbridge-pattern"
+      ]
+    },
+    {
+      "id": "input-validation",
+      "title": "Input validation — validate at trust boundaries, never inside",
+      "layer": "generic",
+      "file": "generic/input-validation.md",
+      "tags": [
+        "validation",
+        "security",
+        "input",
+        "zod",
+        "pydantic",
+        "schema"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-worker",
+          "add-handler",
+          "add-queue-consumer"
+        ],
+        "stages": [
+          3,
+          6
+        ]
+      },
+      "size_tokens": 230,
+      "related": [
+        "api-endpoint-design",
+        "error-handling",
+        "pii-handling"
+      ]
+    },
+    {
+      "id": "motion-preference",
+      "title": "Motion preference — prefers-reduced-motion compliance pattern",
+      "layer": "generic",
+      "file": "generic/motion-preference.md",
+      "tags": [
+        "accessibility",
+        "animation",
+        "motion",
+        "css",
+        "react",
+        "wcag",
+        "eu-accessibility"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-animation",
+          "add-ui"
+        ],
+        "stages": [
+          4,
+          8
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "accessibility-wcag",
+        "react-motion-library"
+      ]
+    },
+    {
+      "id": "pagination-pattern",
+      "title": "Pagination — cursor-based (keyset) over offset, stable ordering, edge cases",
+      "layer": "generic",
+      "file": "generic/pagination-pattern.md",
+      "tags": [
+        "pagination",
+        "cursor",
+        "keyset",
+        "offset",
+        "api",
+        "performance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "api-endpoint-design",
+        "rds-query",
+        "input-validation"
+      ]
+    },
+    {
+      "id": "pii-handling",
+      "title": "PII handling — never in logs, never in prompts, masking patterns",
+      "layer": "generic",
+      "file": "generic/pii-handling.md",
+      "tags": [
+        "security",
+        "privacy",
+        "pii",
+        "gdpr",
+        "logging",
+        "llm"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-worker",
+          "add-handler",
+          "modify-handler"
+        ],
+        "stages": [
+          6,
+          8
+        ]
+      },
+      "size_tokens": 240,
+      "related": [
+        "structured-logging",
+        "secret-handling",
+        "authn-pattern"
+      ]
+    },
+    {
+      "id": "rate-limiting",
+      "title": "Rate limiting — token bucket, per-user limits, 429 response with Retry-After",
+      "layer": "generic",
+      "file": "generic/rate-limiting.md",
+      "tags": [
+        "rate-limiting",
+        "throttling",
+        "token-bucket",
+        "api",
+        "reliability"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "error-handling",
+        "caching-strategy",
+        "api-endpoint-design",
+        "input-validation"
+      ]
+    },
+    {
+      "id": "retry-pattern",
+      "title": "Retry pattern — exponential backoff, jitter, max attempts, non-retryable errors",
+      "layer": "generic",
+      "file": "generic/retry-pattern.md",
+      "tags": [
+        "retry",
+        "exponential-backoff",
+        "jitter",
+        "reliability",
+        "resilience"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-worker",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "error-handling",
+        "idempotency",
+        "circuit-breaker"
+      ]
+    },
+    {
+      "id": "secrets-management",
+      "title": "Secrets management — never in code/env files, AWS Secrets Manager, rotation",
+      "layer": "generic",
+      "file": "generic/secrets-management.md",
+      "tags": [
+        "secrets",
+        "security",
+        "aws-secrets-manager",
+        "environment-variables",
+        "rotation"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-integration",
+          "deploy",
+          "any"
+        ],
+        "stages": [
+          2,
+          3,
+          5
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "environment-config",
+        "structured-logging",
+        "serverless-yml-pattern"
+      ]
+    },
+    {
+      "id": "structured-logging",
+      "title": "Structured logging — JSON shape, correlation IDs, log levels",
+      "layer": "generic",
+      "file": "generic/structured-logging.md",
+      "tags": [
+        "observability",
+        "logging",
+        "json",
+        "correlation-id",
+        "cloudwatch"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-worker",
+          "add-handler",
+          "modify-handler"
+        ],
+        "stages": [
+          8
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "pii-handling",
+        "distributed-tracing",
+        "metrics-design"
+      ]
+    },
+    {
+      "id": "testing-strategy",
+      "title": "Testing strategy — unit vs integration vs e2e, what to test, what not to",
+      "layer": "generic",
+      "file": "generic/testing-strategy.md",
+      "tags": [
+        "testing",
+        "unit-test",
+        "integration-test",
+        "e2e",
+        "jest",
+        "vitest"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-endpoint",
+          "add-worker",
+          "add-component"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "code-review-checklist",
+        "refactoring-safety",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "web-vitals",
+      "title": "Core Web Vitals — LCP, INP, CLS targets and measurement",
+      "layer": "generic",
+      "file": "generic/web-vitals.md",
+      "tags": [
+        "performance",
+        "web-vitals",
+        "lcp",
+        "inp",
+        "cls",
+        "lighthouse",
+        "ux"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-page",
+          "add-component",
+          "performance-audit"
+        ],
+        "stages": [
+          9
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "bundle-budget",
+        "motion-preference",
+        "react-design-tokens"
+      ]
+    },
+    {
+      "id": "webhook-pattern",
+      "title": "Webhook pattern — signature verification, async processing, replay safety",
+      "layer": "generic",
+      "file": "generic/webhook-pattern.md",
+      "tags": [
+        "webhook",
+        "signature",
+        "hmac",
+        "idempotency",
+        "reliability",
+        "integration"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "idempotency",
+        "error-handling",
+        "structured-logging",
+        "input-validation"
+      ]
+    },
+    {
+      "id": "lambda-worker",
+      "title": "Lambda worker — six-step async pattern",
+      "layer": "stack",
+      "file": "lambda-worker.md",
+      "tags": [
+        "aws",
+        "lambda",
+        "worker",
+        "sqs",
+        "async",
+        "idempotency"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "modify-worker",
+          "debug-worker",
+          "add-queue-consumer"
+        ],
+        "stages": [
+          5,
+          7,
+          9
+        ]
+      },
+      "size_tokens": 320,
+      "related": [
+        "sqs-trigger",
+        "supabase-rls",
+        "structured-logging",
+        "zod-validation"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "api-doc-pattern",
+      "title": "API documentation pattern — OpenAPI spec, error catalog, versioning notes",
+      "layer": "practice",
+      "file": "practice/api-doc-pattern.md",
+      "tags": [
+        "api",
+        "openapi",
+        "documentation",
+        "swagger",
+        "rest"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "modify-handler"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "readme-structure",
+        "architecture-doc",
+        "changelog-pattern",
+        "api-endpoint-design"
+      ]
+    },
+    {
+      "id": "architecture-doc",
+      "title": "Architecture doc — system context, component diagram, data flow, trade-offs",
+      "layer": "practice",
+      "file": "practice/architecture-doc.md",
+      "tags": [
+        "architecture",
+        "documentation",
+        "c4",
+        "system-design",
+        "adr"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          1,
+          2
+        ]
+      },
+      "size_tokens": 190,
+      "related": [
+        "decision-record",
+        "readme-structure",
+        "api-doc-pattern"
+      ]
+    },
+    {
+      "id": "changelog-pattern",
+      "title": "Changelog pattern — Keep a Changelog format, semantic versioning",
+      "layer": "practice",
+      "file": "practice/changelog-pattern.md",
+      "tags": [
+        "changelog",
+        "semver",
+        "release",
+        "documentation",
+        "versioning"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 185,
+      "related": [
+        "commit-message-convention",
+        "pr-description-template",
+        "api-doc-pattern"
+      ]
+    },
+    {
+      "id": "code-review-checklist",
+      "title": "Code review checklist — correctness, security, style, test coverage",
+      "layer": "practice",
+      "file": "practice/code-review-checklist.md",
+      "tags": [
+        "code-review",
+        "checklist",
+        "pr",
+        "quality",
+        "security"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "pr-description-template",
+        "refactoring-safety",
+        "testing-strategy"
+      ]
+    },
+    {
+      "id": "commit-message-convention",
+      "title": "Commit message convention — Conventional Commits, scope, body rules",
+      "layer": "practice",
+      "file": "practice/commit-message-convention.md",
+      "tags": [
+        "git",
+        "commit",
+        "conventional-commits",
+        "changelog",
+        "ci"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "changelog-pattern",
+        "pr-description-template"
+      ]
+    },
+    {
+      "id": "compaction-checkpoint",
+      "title": "Compaction checkpoint — when to flush writer state and compact",
+      "layer": "practice",
+      "file": "practice/compaction-checkpoint.md",
+      "tags": [
+        "ai-coding",
+        "writer-agent",
+        "context-management",
+        "checkpoint",
+        "iteration"
+      ],
+      "applies_to": {
+        "task_types": [
+          "all"
+        ],
+        "stages": [
+          "all"
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "runbook-pattern",
+        "incident-response"
+      ]
+    },
+    {
+      "id": "decision-record",
+      "title": "Decision record — ADR format, when to write, what to include",
+      "layer": "practice",
+      "file": "practice/decision-record.md",
+      "tags": [
+        "adr",
+        "architecture",
+        "decision",
+        "documentation",
+        "rationale"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          1,
+          2,
+          3,
+          5
+        ]
+      },
+      "size_tokens": 190,
+      "related": [
+        "architecture-doc",
+        "tech-debt-tracking",
+        "sdlc-gate"
+      ]
+    },
+    {
+      "id": "design-drift-audit",
+      "title": "Design drift audit — detect production vs Figma divergence",
+      "layer": "practice",
+      "file": "practice/design-drift-audit.md",
+      "tags": [
+        "design",
+        "figma",
+        "drift",
+        "audit",
+        "qa",
+        "stage-7"
+      ],
+      "applies_to": {
+        "task_types": [
+          "audit",
+          "design-review",
+          "observability"
+        ],
+        "stages": [
+          7
+        ]
+      },
+      "size_tokens": 190,
+      "related": [
+        "visual-regression-pattern",
+        "sdlc-figma"
+      ]
+    },
+    {
+      "id": "incident-response",
+      "title": "Incident response — declare, mitigate, communicate, resolve",
+      "layer": "practice",
+      "file": "practice/incident-response.md",
+      "tags": [
+        "incident",
+        "on-call",
+        "response",
+        "sre",
+        "communication"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-monitoring",
+          "add-worker"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "postmortem-blameless",
+        "runbook-pattern",
+        "oncall-handoff"
+      ]
+    },
+    {
+      "id": "oncall-handoff",
+      "title": "On-call handoff — active incidents, recent changes, known issues, contacts",
+      "layer": "practice",
+      "file": "practice/oncall-handoff.md",
+      "tags": [
+        "oncall",
+        "handoff",
+        "operations",
+        "sre",
+        "shift-change"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 185,
+      "related": [
+        "incident-response",
+        "runbook-pattern",
+        "postmortem-blameless"
+      ]
+    },
+    {
+      "id": "postmortem-blameless",
+      "title": "Blameless postmortem — timeline, contributing factors, action items",
+      "layer": "practice",
+      "file": "practice/postmortem-blameless.md",
+      "tags": [
+        "postmortem",
+        "blameless",
+        "incident",
+        "sre",
+        "continuous-improvement"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "incident-response",
+        "runbook-pattern",
+        "tech-debt-tracking"
+      ]
+    },
+    {
+      "id": "pr-description-template",
+      "title": "PR description template — summary, test plan, screenshots, reviewer notes",
+      "layer": "practice",
+      "file": "practice/pr-description-template.md",
+      "tags": [
+        "pr",
+        "pull-request",
+        "review",
+        "documentation",
+        "workflow"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 190,
+      "related": [
+        "code-review-checklist",
+        "commit-message-convention",
+        "changelog-pattern"
+      ]
+    },
+    {
+      "id": "readme-structure",
+      "title": "README structure — purpose, quickstart, architecture, contributing",
+      "layer": "practice",
+      "file": "practice/readme-structure.md",
+      "tags": [
+        "readme",
+        "documentation",
+        "onboarding",
+        "developer-experience"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          1,
+          2
+        ]
+      },
+      "size_tokens": 185,
+      "related": [
+        "architecture-doc",
+        "api-doc-pattern",
+        "changelog-pattern"
+      ]
+    },
+    {
+      "id": "refactoring-safety",
+      "title": "Refactoring safety — test first, small steps, no behavior change",
+      "layer": "practice",
+      "file": "practice/refactoring-safety.md",
+      "tags": [
+        "refactoring",
+        "safety",
+        "tests",
+        "incremental",
+        "clean-code"
+      ],
+      "applies_to": {
+        "task_types": [
+          "refactor",
+          "modify-handler",
+          "modify-component"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "code-review-checklist",
+        "testing-strategy",
+        "tech-debt-tracking"
+      ]
+    },
+    {
+      "id": "runbook-pattern",
+      "title": "Runbook pattern — operational procedures, alert-to-action, copy-paste commands",
+      "layer": "practice",
+      "file": "practice/runbook-pattern.md",
+      "tags": [
+        "runbook",
+        "operations",
+        "oncall",
+        "alert",
+        "sre"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-monitoring",
+          "add-worker",
+          "deploy"
+        ],
+        "stages": [
+          7,
+          10
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "incident-response",
+        "oncall-handoff",
+        "postmortem-blameless"
+      ]
+    },
+    {
+      "id": "tech-debt-tracking",
+      "title": "Tech debt tracking — log, classify, prioritise — don't fix silently",
+      "layer": "practice",
+      "file": "practice/tech-debt-tracking.md",
+      "tags": [
+        "tech-debt",
+        "tracking",
+        "backlog",
+        "todo",
+        "maintenance"
+      ],
+      "applies_to": {
+        "task_types": [
+          "any"
+        ],
+        "stages": [
+          5,
+          7,
+          10
+        ]
+      },
+      "size_tokens": 185,
+      "related": [
+        "decision-record",
+        "refactoring-safety",
+        "code-review-checklist"
+      ]
+    },
+    {
+      "id": "visual-regression-pattern",
+      "title": "Visual regression — Playwright snapshot testing for UI components",
+      "layer": "practice",
+      "file": "practice/visual-regression-pattern.md",
+      "tags": [
+        "testing",
+        "visual-regression",
+        "playwright",
+        "snapshot",
+        "ci"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "modify-component",
+          "add-page",
+          "testing"
+        ],
+        "stages": [
+          4,
+          7
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "design-drift-audit",
+        "accessibility-wcag"
+      ]
+    },
+    {
+      "id": "coa-collision-check",
+      "title": "COA collision check — verify against live COA before proposing codes",
+      "layer": "project",
+      "file": "project/rabos/coa-collision-check.md",
+      "tags": [
+        "rabos",
+        "coa",
+        "chart-of-accounts",
+        "collision",
+        "accounting",
+        "validation"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-posting-rule",
+          "modify-posting-rule",
+          "add-coa-rule",
+          "add-ai-call"
+        ],
+        "stages": [
+          3,
+          7
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "posting-rule",
+        "supabase-rls",
+        "rds-query"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "connector-interface",
+      "title": "Connector interface — universal list/read/write contract",
+      "layer": "project",
+      "file": "project/rabos/connector-interface.md",
+      "tags": [
+        "rabos",
+        "connector",
+        "interface",
+        "integration",
+        "contract",
+        "typescript"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-connector",
+          "modify-connector",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 250,
+      "related": [
+        "supabase-rls",
+        "rabos-event-shape",
+        "input-validation"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "geocoding-pipeline",
+      "title": "Geocoding pipeline — pin code extraction, quality scoring, fallback",
+      "layer": "project",
+      "file": "project/rabos/geocoding-pipeline.md",
+      "tags": [
+        "rabos",
+        "geocoding",
+        "pin-code",
+        "location",
+        "india",
+        "quality-score"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-geocoding",
+          "modify-geocoding",
+          "add-location"
+        ],
+        "stages": [
+          3,
+          7,
+          9
+        ]
+      },
+      "size_tokens": 230,
+      "related": [
+        "bedrock-call",
+        "supabase-rls",
+        "structured-logging"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "insight-rule",
+      "title": "Atlas insight — six-step pipeline, dedup, Claude template",
+      "layer": "project",
+      "file": "project/rabos/insight-rule.md",
+      "tags": [
+        "rabos",
+        "atlas",
+        "ai",
+        "insight",
+        "bedrock",
+        "dedup",
+        "claude"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-insight",
+          "modify-insight",
+          "add-atlas-rule"
+        ],
+        "stages": [
+          3,
+          7,
+          9
+        ]
+      },
+      "size_tokens": 310,
+      "related": [
+        "bedrock-call",
+        "bedrock-max-tokens",
+        "supabase-rls",
+        "pii-handling"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "posting-rule",
+      "title": "Posting rule — visual posting rules, COA collision check",
+      "layer": "project",
+      "file": "project/rabos/posting-rule.md",
+      "tags": [
+        "rabos",
+        "posting-rules",
+        "coa",
+        "accounting",
+        "visual",
+        "collision"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-posting-rule",
+          "modify-posting-rule",
+          "add-coa-rule"
+        ],
+        "stages": [
+          3,
+          7
+        ]
+      },
+      "size_tokens": 240,
+      "related": [
+        "coa-collision-check",
+        "supabase-rls",
+        "rds-query"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "rabos-brand-system",
+      "title": "RABOS brand system — navy/gold, DM Sans/Mono/Fraunces, dark mode",
+      "layer": "project",
+      "file": "project/rabos/rabos-brand-system.md",
+      "tags": [
+        "rabos",
+        "design",
+        "brand",
+        "tailwind",
+        "typography",
+        "dark-mode",
+        "ui"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "modify-component",
+          "add-page",
+          "add-ui"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "react-component"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "rabos-component-library",
+      "title": "RABOS component library — reusable components and Code Connect mappings",
+      "layer": "project",
+      "file": "project/rabos/rabos-component-library.md",
+      "tags": [
+        "rabos",
+        "components",
+        "design-system",
+        "code-connect",
+        "figma",
+        "reuse"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "add-ui"
+        ],
+        "stages": [
+          3,
+          4
+        ]
+      },
+      "size_tokens": 260,
+      "related": [
+        "rabos-brand-system",
+        "react-component",
+        "react-aria-pattern",
+        "react-design-tokens"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "rabos-event-shape",
+      "title": "RABOS event shape — internal event envelope, source tagging",
+      "layer": "project",
+      "file": "project/rabos/rabos-event-shape.md",
+      "tags": [
+        "rabos",
+        "events",
+        "eventbridge",
+        "envelope",
+        "schema",
+        "source-tagging"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "add-event",
+          "modify-event",
+          "add-handler"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "lambda-worker",
+        "input-validation",
+        "structured-logging"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "rabos-feature-flag",
+      "title": "RABOS feature flag — per-tenant flag pattern, evaluation logic",
+      "layer": "project",
+      "file": "project/rabos/rabos-feature-flag.md",
+      "tags": [
+        "rabos",
+        "feature-flag",
+        "tenant",
+        "per-tenant",
+        "rollout"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-feature-flag",
+          "modify-feature-flag",
+          "add-handler",
+          "add-worker"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "rabos-tenant-context",
+        "caching-strategy",
+        "supabase-rls"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "rabos-tenant-context",
+      "title": "RABOS tenant context — JWT shape, tenant resolution, RLS injection",
+      "layer": "project",
+      "file": "project/rabos/rabos-tenant-context.md",
+      "tags": [
+        "rabos",
+        "jwt",
+        "tenant",
+        "auth",
+        "rls",
+        "cognito"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "modify-handler",
+          "add-worker",
+          "add-endpoint"
+        ],
+        "stages": [
+          3,
+          6
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "lambda-handler",
+        "supabase-rls",
+        "authn-pattern"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "semantic-dsl",
+      "title": "Semantic DSL — RIS Analyst pattern, no raw SQL ever",
+      "layer": "project",
+      "file": "project/rabos/semantic-dsl.md",
+      "tags": [
+        "rabos",
+        "ris",
+        "semantic-dsl",
+        "sql",
+        "analyst",
+        "llm"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-analyst",
+          "modify-analyst",
+          "add-query",
+          "add-ai-call"
+        ],
+        "stages": [
+          3,
+          7
+        ]
+      },
+      "size_tokens": 260,
+      "related": [
+        "bedrock-call",
+        "rds-query",
+        "supabase-rls",
+        "pii-handling"
+      ],
+      "project": "rabos"
+    },
+    {
+      "id": "bedrock-call",
+      "title": "Bedrock Claude call — max_tokens, model routing, prompt caching",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/bedrock-call.md",
+      "tags": [
+        "aws",
+        "bedrock",
+        "claude",
+        "llm",
+        "ai",
+        "prompt-caching",
+        "max-tokens"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-ai-call",
+          "add-worker",
+          "modify-llm-call"
+        ],
+        "stages": [
+          3,
+          9
+        ]
+      },
+      "size_tokens": 250,
+      "related": [
+        "bedrock-max-tokens",
+        "pii-handling",
+        "lambda-worker",
+        "structured-logging"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "bedrock-max-tokens",
+      "title": "Bedrock token caps — explicit budgets per task type",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/bedrock-max-tokens.md",
+      "tags": [
+        "aws",
+        "bedrock",
+        "claude",
+        "llm",
+        "cost",
+        "tokens",
+        "budget"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-ai-call",
+          "modify-llm-call"
+        ],
+        "stages": [
+          3,
+          9
+        ]
+      },
+      "size_tokens": 170,
+      "related": [
+        "bedrock-call",
+        "pii-handling"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "cloudfront-cache",
+      "title": "CloudFront cache — cache-control headers, invalidation, signed URLs",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/cloudfront-cache.md",
+      "tags": [
+        "cloudfront",
+        "cdn",
+        "caching",
+        "cache-control",
+        "signed-url",
+        "aws"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-integration",
+          "deploy"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "lambda-handler",
+        "serverless-yml-pattern",
+        "caching-strategy"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "cognito-jwt-validation",
+      "title": "Cognito JWT validation — JWKS fetch, token verify, claims extraction",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/cognito-jwt-validation.md",
+      "tags": [
+        "cognito",
+        "jwt",
+        "auth",
+        "jwks",
+        "token-validation",
+        "aws"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "modify-handler",
+          "add-endpoint"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "lambda-handler",
+        "supabase-rls",
+        "rabos-tenant-context"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "eventbridge-pattern",
+      "title": "EventBridge pattern — custom bus, rule routing, DLQ, retry policy",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/eventbridge-pattern.md",
+      "tags": [
+        "eventbridge",
+        "events",
+        "aws",
+        "event-driven",
+        "dlq",
+        "routing"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-event",
+          "add-worker",
+          "add-handler"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "lambda-worker",
+        "sqs-trigger",
+        "structured-logging"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "lambda-cold-start",
+      "title": "Lambda cold start mitigation — provisioned concurrency, init code placement",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/lambda-cold-start.md",
+      "tags": [
+        "lambda",
+        "cold-start",
+        "performance",
+        "provisioned-concurrency",
+        "aws"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-worker",
+          "deploy"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "lambda-handler",
+        "lambda-worker",
+        "serverless-yml-pattern"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "lambda-handler",
+      "title": "Lambda handler — JWT → validate → withRls → return",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/lambda-handler.md",
+      "tags": [
+        "aws",
+        "lambda",
+        "jwt",
+        "auth",
+        "zod",
+        "rls",
+        "handler"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-endpoint",
+          "add-handler",
+          "modify-handler"
+        ],
+        "stages": [
+          3,
+          5,
+          7
+        ]
+      },
+      "size_tokens": 240,
+      "related": [
+        "api-endpoint-design",
+        "input-validation",
+        "supabase-rls",
+        "structured-logging"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "lambda-worker",
+      "title": "Lambda worker — six-step async pattern",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/lambda-worker.md",
+      "tags": [
+        "aws",
+        "lambda",
+        "worker",
+        "sqs",
+        "async",
+        "idempotency"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "modify-worker",
+          "debug-worker",
+          "add-queue-consumer"
+        ],
+        "stages": [
+          5,
+          7,
+          9
+        ]
+      },
+      "size_tokens": 320,
+      "related": [
+        "supabase-rls",
+        "structured-logging",
+        "input-validation"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "pgvector-pattern",
+      "title": "pgvector pattern — embedding storage, HNSW index, similarity search",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/pgvector-pattern.md",
+      "tags": [
+        "pgvector",
+        "embeddings",
+        "similarity-search",
+        "hnsw",
+        "postgres",
+        "supabase"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-feature",
+          "add-worker",
+          "add-handler"
+        ],
+        "stages": [
+          4,
+          5
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "supabase-migration",
+        "rds-query",
+        "bedrock-call",
+        "supabase-rls"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "prompt-injection-defense",
+      "title": "Prompt injection defense — input sanitisation, output validation, system prompt hardening",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/prompt-injection-defense.md",
+      "tags": [
+        "llm",
+        "prompt-injection",
+        "security",
+        "bedrock",
+        "ai-safety",
+        "input-validation"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-worker",
+          "add-integration"
+        ],
+        "stages": [
+          3,
+          5,
+          6
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "bedrock-call",
+        "input-validation",
+        "structured-logging",
+        "agent-response-contract"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "rds-query",
+      "title": "RDS PostgreSQL query — withRls, parameterized, paginated",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/rds-query.md",
+      "tags": [
+        "aws",
+        "rds",
+        "postgresql",
+        "rls",
+        "sql",
+        "database",
+        "query"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-query",
+          "add-endpoint",
+          "add-worker",
+          "modify-handler"
+        ],
+        "stages": [
+          3,
+          7
+        ]
+      },
+      "size_tokens": 230,
+      "related": [
+        "supabase-rls",
+        "lambda-handler",
+        "schema-migration",
+        "structured-logging"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-aria-pattern",
+      "title": "React ARIA — accessible component primitives with Radix UI",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-aria-pattern.md",
+      "tags": [
+        "react",
+        "accessibility",
+        "aria",
+        "radix-ui",
+        "keyboard",
+        "focus",
+        "a11y"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "modify-component"
+        ],
+        "stages": [
+          4,
+          8
+        ]
+      },
+      "size_tokens": 260,
+      "related": [
+        "accessibility-wcag",
+        "react-component",
+        "motion-preference"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-component",
+      "title": "React component — Zustand, dark navy tokens, DM Sans/Mono",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-component.md",
+      "tags": [
+        "react",
+        "frontend",
+        "zustand",
+        "tailwind",
+        "typescript",
+        "ui"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "modify-component",
+          "add-page",
+          "add-ui"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 230,
+      "related": [
+        "react-data-fetching",
+        "react-state-management",
+        "pii-handling"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-data-fetching",
+      "title": "React data fetching — SWR pattern, optimistic updates, error boundary integration",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-data-fetching.md",
+      "tags": [
+        "react",
+        "swr",
+        "data-fetching",
+        "optimistic-update",
+        "loading-state",
+        "next-js"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "modify-component"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "react-component",
+        "react-state-management",
+        "react-error-boundary"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-design-tokens",
+      "title": "React design tokens — CSS variables + Tailwind config + TypeScript types",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-design-tokens.md",
+      "tags": [
+        "react",
+        "design-tokens",
+        "tailwind",
+        "css-variables",
+        "typescript",
+        "theming"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "design-system",
+          "add-page"
+        ],
+        "stages": [
+          2,
+          3
+        ]
+      },
+      "size_tokens": 250,
+      "related": [
+        "design-system-tokens",
+        "react-component",
+        "rabos-brand-system"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-error-boundary",
+      "title": "React error boundary — per-section boundaries, fallback UI, error logging",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-error-boundary.md",
+      "tags": [
+        "react",
+        "error-boundary",
+        "error-handling",
+        "fallback",
+        "next-js"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "modify-component"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 195,
+      "related": [
+        "react-component",
+        "react-data-fetching",
+        "react-state-management",
+        "structured-logging"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-motion-library",
+      "title": "React motion — Motion library pattern (GPU-only, reduced-motion safe)",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-motion-library.md",
+      "tags": [
+        "react",
+        "animation",
+        "motion",
+        "framer-motion",
+        "performance",
+        "reduced-motion"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-animation",
+          "modify-component"
+        ],
+        "stages": [
+          4,
+          9
+        ]
+      },
+      "size_tokens": 240,
+      "related": [
+        "motion-preference",
+        "react-aria-pattern",
+        "web-vitals"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "react-state-management",
+      "title": "React state management — Zustand for UI state, SWR for server state, no Redux",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/react-state-management.md",
+      "tags": [
+        "react",
+        "zustand",
+        "state-management",
+        "ui-state",
+        "next-js"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-component",
+          "add-page",
+          "modify-component"
+        ],
+        "stages": [
+          3,
+          5
+        ]
+      },
+      "size_tokens": 200,
+      "related": [
+        "react-component",
+        "react-data-fetching",
+        "react-error-boundary"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "schema-migration",
+      "title": "Schema migration — naming, RLS on every table, rollback safety",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/schema-migration.md",
+      "tags": [
+        "postgresql",
+        "database",
+        "migration",
+        "rls",
+        "schema"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-migration",
+          "add-table",
+          "modify-schema",
+          "add-column"
+        ],
+        "stages": [
+          7
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "supabase-rls",
+        "rds-query"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "serverless-yml-pattern",
+      "title": "serverless.yml pattern — function structure, env vars, IAM, deployment stages",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/serverless-yml-pattern.md",
+      "tags": [
+        "serverless-framework",
+        "serverless-yml",
+        "lambda",
+        "iam",
+        "deployment",
+        "aws"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-handler",
+          "add-worker",
+          "deploy"
+        ],
+        "stages": [
+          2,
+          5,
+          7
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "lambda-handler",
+        "lambda-worker",
+        "lambda-cold-start",
+        "eventbridge-pattern"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "sqs-trigger",
+      "title": "SQS trigger pattern — Lambda consumer, batch size, visibility timeout, DLQ",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/sqs-trigger.md",
+      "tags": [
+        "sqs",
+        "lambda",
+        "queue",
+        "batch",
+        "dlq",
+        "aws",
+        "event-driven"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-worker",
+          "add-handler"
+        ],
+        "stages": [
+          5,
+          7
+        ]
+      },
+      "size_tokens": 205,
+      "related": [
+        "lambda-worker",
+        "eventbridge-pattern",
+        "structured-logging"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "supabase-migration",
+      "title": "Supabase migration — sqitch-style versioned SQL, RLS policy updates",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/supabase-migration.md",
+      "tags": [
+        "supabase",
+        "migration",
+        "sql",
+        "rls",
+        "schema",
+        "postgres"
+      ],
+      "applies_to": {
+        "task_types": [
+          "schema-migration",
+          "add-table",
+          "modify-table"
+        ],
+        "stages": [
+          4,
+          5
+        ]
+      },
+      "size_tokens": 210,
+      "related": [
+        "supabase-rls",
+        "rds-query",
+        "schema-migration"
+      ],
+      "stack": "react-supabase-lambda"
+    },
+    {
+      "id": "supabase-rls",
+      "title": "Supabase RLS — tenant isolation on every new table",
+      "layer": "stack",
+      "file": "stack/react-supabase-lambda/supabase-rls.md",
+      "tags": [
+        "supabase",
+        "postgresql",
+        "rls",
+        "tenant-isolation",
+        "security",
+        "database"
+      ],
+      "applies_to": {
+        "task_types": [
+          "add-migration",
+          "add-table",
+          "modify-schema"
+        ],
+        "stages": [
+          6,
+          7
+        ]
+      },
+      "size_tokens": 220,
+      "related": [
+        "schema-migration",
+        "rds-query",
+        "lambda-handler",
+        "authn-pattern"
+      ],
+      "stack": "react-supabase-lambda"
+    }
+  ]
+}

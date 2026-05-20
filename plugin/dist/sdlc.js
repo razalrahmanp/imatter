@@ -75,6 +75,78 @@ export function appendTableRow(sdlcPath, sectionHeading, newRow) {
     const lineNumber = content.slice(0, content.indexOf(newRow)).split("\n").length;
     return { lineNumber };
 }
+/**
+ * Regenerates the Quick Reference table in SDLC_VALIDATION.md from state.
+ * Overwrites status/date columns; preserves stage numbers, names, and ONGOING rows.
+ * Called after every gate transition so the table can't drift from reality.
+ */
+export function regenerateQuickReference(state, sdlcPath) {
+    // Build stage → latest cleared entry map
+    const clearedMap = new Map();
+    for (const entry of state.history) {
+        if (["PASSED", "PASSED_WITH_CONCERNS", "WAIVED"].includes(entry.gate)) {
+            const existing = clearedMap.get(entry.stage);
+            if (!existing || entry.cleared_at > existing.cleared_at) {
+                clearedMap.set(entry.stage, entry);
+            }
+        }
+    }
+    let content = readFileSync(sdlcPath, "utf-8");
+    const lines = content.split("\n");
+    let inQrSection = false;
+    let pastSeparator = false;
+    let changed = false;
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!inQrSection) {
+            if (line.startsWith("## Quick Reference"))
+                inQrSection = true;
+            continue;
+        }
+        // Exit when next section starts
+        if (line.startsWith("## ") && !line.startsWith("## Quick Reference"))
+            break;
+        // Advance past the separator row (|---|---|...|)
+        if (!pastSeparator) {
+            if (/^\|[-| :]+\|/.test(line))
+                pastSeparator = true;
+            continue;
+        }
+        // Only process data rows
+        if (!/^\|\s*\d+/.test(line))
+            continue;
+        const cells = line.split("|").map((c) => c.trim()).filter(Boolean);
+        const stageNum = parseInt(cells[0] ?? "0", 10);
+        const stageName = cells[1] ?? "";
+        const currentStatus = cells[2] ?? "";
+        // Leave ONGOING rows (monitoring, compute placement, etc.) untouched
+        if (currentStatus.includes("ONGOING"))
+            continue;
+        const cleared = clearedMap.get(stageNum);
+        let newStatus;
+        let newDate;
+        if (cleared) {
+            newStatus = "`PASSED`";
+            newDate = cleared.cleared_at.split("T")[0];
+        }
+        else if (state.cursor.stage === stageNum) {
+            newStatus = "`IN PROGRESS`";
+            newDate = "";
+        }
+        else {
+            newStatus = "`NOT STARTED`";
+            newDate = "";
+        }
+        const newLine = `| ${stageNum} | ${stageName} | ${newStatus} | ${newDate} |`;
+        if (lines[i] !== newLine) {
+            lines[i] = newLine;
+            changed = true;
+        }
+    }
+    if (changed) {
+        writeFileSync(sdlcPath, lines.join("\n"), "utf-8");
+    }
+}
 export function artifactInfo(artifactPath, projectRoot) {
     const fullPath = artifactPath.match(/^([A-Za-z]:[/\\]|\/)/) ? artifactPath : join(projectRoot, artifactPath);
     if (!existsSync(fullPath))

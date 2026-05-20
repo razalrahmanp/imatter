@@ -1,16 +1,33 @@
 # Learning Projects — Claude Session Rules
 
-## Mandatory startup (run before any work)
+## Session start protocol
 
-1. Locate the SDLC_VALIDATION.md for the active scope:
-   - If working in a subdirectory (e.g. `01-sql-running-totals/`), read **that directory's** `SDLC_VALIDATION.md`.
-   - If no subdirectory SDLC file exists, read the root `SDLC_VALIDATION.md`.
-2. Fill every `[PLACEHOLDER]` by reading the repository — never guess.
-3. Present the filled **Section 1 Project Identity** table to the user with `file:line` citations.
-4. State the current gate status for every stage (the Quick Reference table at the bottom of the SDLC file).
-5. Only then ask what the user wants to work on.
+1. Locate `.sdlc-state.json` for the active scope:
+   - Check the current subdirectory first, then the project root.
+   - If found: read it — cursor stage, gate history, and flagged stages are all here (~3KB).
+   - If not found: locate `SDLC_VALIDATION.md` instead and use the Quick Reference table for gate status.
+2. Call `read_sdlc_section('18. Session Log')` — last session's notes (~0.5KB).
+3. Display to the user:
+   - Cursor: Stage N — `<status>`
+   - Gates cleared: list from `history[].stage` + `history[].gate`
+   - Last session: one-line summary from Section 18
+   - Flagged: any entries in `flagged[]`
+4. Ask what the user wants to work on.
 
-If you cannot locate an SDLC_VALIDATION.md, say so explicitly and stop — do not proceed without it.
+DO NOT read the full SDLC_VALIDATION.md at startup.
+
+## Knowledge access rules (surgical reads only)
+
+Load content on demand — never pre-load speculatively:
+
+- **Stage content** → `read_sdlc_section('N. Stage N — <name>')` when entering that stage
+- **Gate criteria** → `read_sdlc_section` for that stage's gate heading when checking a gate
+- **Protocol rules** → already present in this CLAUDE.md; do not re-read Section 0
+- **Session state** → `get_session_context` — never read `.sdlc-state.json` directly after startup
+- **Skills** → `sdlc_skills_fetch` — never read skill files directly
+- **Full doc** → `load_sdlc_context` only when the user explicitly requests a full framework review
+
+If you find yourself wanting the full doc, pick the specific section instead.
 
 ---
 

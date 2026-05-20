@@ -1,0 +1,53 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "rules": {
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["*/shared/db*", "*/shared/db"],
+            "importNames": ["*"],
+            "message": "DB client must not be imported in frontend code. Only Lambda functions in src/functions/ may import from shared/db."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/frontend/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["pg", "prisma", "@prisma/*", "drizzle-orm", "*/shared/db*"],
+                "message": "Database clients are forbidden in frontend code."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

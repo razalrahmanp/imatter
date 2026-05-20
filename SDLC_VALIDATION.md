@@ -735,6 +735,12 @@ Every call to an LLM in the product codebase must have:
 | Date | Stage | Decision | Rationale | Alternatives considered | Approved by |
 |---|---|---|---|---|---|
 | [DATE] | [N] | [DECISION TEXT] | [WHY] | [WHAT ELSE WAS CONSIDERED] | [NAME] |
+| 2026-05-20 | Plugin | SDLC Validate integrates with Superpowers, Playwright MCP, and Context7 as co-dependencies rather than reimplementing their capabilities | Each plugin is mature, maintained, and fills a gap (methodology, browser verification, live docs) that SDLC Validate should orchestrate, not own | Reimplementing brainstorming/TDD/debugging in SDLC Validate; ignoring these plugins entirely | razalrahmanp |
+| 2026-05-20 | Plugin | Hard dependency for production-coding mode; optional for audit-only mode | Production-coding without Superpowers/Playwright/Context7 is substantially weaker; audit-only use cases (CI gate checks) don't need them | Hard dependency always; fully optional always | razalrahmanp |
+| 2026-05-20 | Plugin | Four new plugin skills built: sdlc-dispatcher, sdlc-superpowers, sdlc-playwright, sdlc-context7 | Skills provide the integration glue; without them each co-dependency is invoked ad-hoc or not at all | Single monolithic integration skill; inline instructions in sdlc-work.md | razalrahmanp |
+| 2026-05-20 | Plugin | UI quality is a cross-cutting SDLC concern, not a single-stage task — added UI gate requirements to Stages 1-10 | Other frameworks (OCTALUME, agentic-sdlc-plugin) treat UI as a task; SDLC Validate gates it as a quality property throughout | UI-only stage; ignore UI in non-UI stages | razalrahmanp |
+| 2026-05-20 | Plugin | Frontend Design + Figma MCP declared as required co-dependencies for frontend stack profiles | Mature, official plugins that fill the aesthetic quality and design-source gaps; SDLC Validate orchestrates, does not reimplement | Build aesthetic enforcement engine internally; keep UI co-dependencies optional | razalrahmanp |
+| 2026-05-20 | Skills | 17 new skills built: 2 plugin integration (sdlc-frontend-design, sdlc-figma), 6 generic (design-spec-jsonc, accessibility-wcag, web-vitals, bundle-budget, motion-preference, design-system-tokens), 2 practice (design-drift-audit, visual-regression-pattern), 3 stack (react-design-tokens, react-aria-pattern, react-motion-library), 1 RABOS (rabos-component-library), 3 compliance (wcag-2-1-aa, accessibility-eu, accessibility-us) | Fills the UI quality and accessibility compliance gap identified in analysis; accessibility-eu directly addresses EU Accessibility Act enforced June 2025 | Build skills incrementally over time; defer compliance modules | razalrahmanp |
 
 ---
 
@@ -766,7 +772,13 @@ Every call to an LLM in the product codebase must have:
 
 | Date | Work done | Gates changed | Blockers / next step |
 |---|---|---|---|
-| | | | |
+| 2026-05-20 | Designed SDLC orchestration layer end-to-end: .sdlc-state.json schema, sNN-findings.md frontmatter format, gate synthesis algorithm, namespace isolation. Implemented state.ts + 4 MCP tools (sdlc_state_create, sdlc_init, sdlc_agent_write, sdlc_gate_run). Ran test-practice Stage 4 (Testing Strategy) end-to-end -- PASSED. Built 6 plugin skills (sdlc-dispatcher, sdlc-superpowers, sdlc-playwright, sdlc-context7, sdlc-frontend-design, sdlc-figma) and 17 content skills (generic/practice/stack/compliance). Fixed Stop hook duplicate-guard bug (was checking wrong table section) and UTF-8 encoding bug (Get-Content defaulting to CP1252). | none (root template) | Continue expanding test-practice skill library |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 
 ---
 

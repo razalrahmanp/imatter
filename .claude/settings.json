@@ -6,9 +6,9 @@
         "hooks": [
           {
             "type": "command",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $cmd = $inp.tool_input.command; $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; Add-Content -Path \"$env:USERPROFILE\\.claude\\bash-log.txt\" -Value \"$ts | $cmd\" -ErrorAction SilentlyContinue; exit 0",
             "shell": "powershell",
-            "statusMessage": "Logging bash command...",
-            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $cmd = $inp.tool_input.command; $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; Add-Content -Path \"$env:USERPROFILE\\.claude\\bash-log.txt\" -Value \"$ts | $cmd\" -ErrorAction SilentlyContinue; exit 0"
+            "statusMessage": "Logging bash command..."
           }
         ]
       },
@@ -17,9 +17,9 @@
         "hooks": [
           {
             "type": "command",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; $root = 'g:\\PROJECT\\Learning Projects'; if ($f -and !$f.StartsWith($root)) { Write-Output \"BLOCKED: Writes outside Learning Projects are not allowed. Path: $f\"; exit 1 }; exit 0",
             "shell": "powershell",
-            "statusMessage": "Checking write path...",
-            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; $root = 'g:\\PROJECT\\Learning Projects'; if ($f -and !$f.StartsWith($root)) { Write-Output \"BLOCKED: Writes outside Learning Projects are not allowed. Path: $f\"; exit 1 }; exit 0"
+            "statusMessage": "Checking write path..."
           }
         ]
       }
@@ -29,8 +29,8 @@
         "hooks": [
           {
             "type": "command",
-            "shell": "powershell",
-            "command": "Write-Output 'SDLC reminder: Before this session ends, append one line to Section 18 (Session Log) in the active SDLC_VALIDATION.md — date, work done, gate changes, and next step.'; exit 0"
+            "command": "$today = Get-Date -Format 'yyyy-MM-dd'; $root = 'g:\\PROJECT\\Learning Projects'; $stateCandidates = @('practices\\test-practice\\.sdlc-state.json'); $sdlcPath = $null; $workDone = 'Session active'; $gatesChanged = 'none'; $nextStep = 'Check .sdlc-state.json for current stage'; foreach ($sc in $stateCandidates) { $sp = Join-Path $root $sc; if (Test-Path $sp) { try { $st = Get-Content $sp -Raw | ConvertFrom-Json; $sdlcPath = $st.sdlc_file; $stage = $st.cursor.stage; $hist = $st.history; $lastCleared = if ($hist -and $hist.Count -gt 0) { $h = $hist[-1]; \"Stage $($h.stage) ($($h.name)) PASSED $($h.cleared_at)\" } else { 'none' }; $workDone = \"Cursor at Stage $stage. Last cleared: $lastCleared\"; $gatesChanged = if ($hist -and $hist.Count -gt 0) { \"Stage $($hist[-1].stage) PASSED\" } else { 'none' }; $nextStep = \"Call sdlc_init for Stage $stage\" } catch {} ; break } }; if (-not $sdlcPath) { $sdlcPath = Join-Path $root 'SDLC_VALIDATION.md' }; if (-not (Test-Path $sdlcPath)) { exit 0 }; $lines = [System.IO.File]::ReadAllLines($sdlcPath, [System.Text.Encoding]::UTF8); $sl2Idx = ($lines | Select-String -Pattern '^## 18\\. Session Log').LineNumber - 1; $sl2End = $lines.Count; if ($sl2Idx -ge 0) { for ($j2 = $sl2Idx + 1; $j2 -lt $lines.Count; $j2++) { if ($lines[$j2] -match '^## ') { $sl2End = $j2; break } }; $slRows = $lines[$sl2Idx..($sl2End-1)] | Where-Object { $_ -match '^\\|' }; $lastSlRow = if ($slRows) { $slRows[-1] } else { '' }; if ($lastSlRow -match [regex]::Escape($today)) { exit 0 } }; $row = \"| $today | $workDone | $gatesChanged | $nextStep |\"; $sIdx = ($lines | Select-String -Pattern '^## 18\\. Session Log').LineNumber - 1; if ($sIdx -lt 0) { exit 0 }; $insertAt = -1; for ($i = $sIdx; $i -lt $lines.Count; $i++) { if ($lines[$i] -match '^\\|') { $insertAt = $i }; if ($i -gt $sIdx -and $lines[$i] -match '^## ') { break } }; if ($insertAt -lt 0) { exit 0 }; $newLines = $lines[0..$insertAt] + $row + $(if ($insertAt + 1 -lt $lines.Count) { $lines[($insertAt+1)..($lines.Count-1)] } else { @() }); [System.IO.File]::WriteAllLines($sdlcPath, $newLines, [System.Text.UTF8Encoding]::new($false)); exit 0",
+            "shell": "powershell"
           }
         ]
       }
@@ -41,18 +41,19 @@
         "hooks": [
           {
             "type": "command",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; if ($f -match '\\.py$') { if (Get-Command ruff -ErrorAction SilentlyContinue) { & ruff check --fix $f } else { Write-Output 'ruff not installed - skipping Python lint' } }; exit 0",
             "shell": "powershell",
-            "statusMessage": "Linting Python...",
-            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; if ($f -match '\\.py$') { if (Get-Command ruff -ErrorAction SilentlyContinue) { & ruff check --fix $f } else { Write-Output 'ruff not installed - skipping Python lint' } }; exit 0"
+            "statusMessage": "Linting Python..."
           },
           {
             "type": "command",
+            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; if ($f -match '\\.sql$') { if (Get-Command sqlfluff -ErrorAction SilentlyContinue) { & sqlfluff fix --dialect ansi $f } else { Write-Output 'sqlfluff not installed - skipping SQL lint' } }; exit 0",
             "shell": "powershell",
-            "statusMessage": "Linting SQL...",
-            "command": "$inp = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $inp.tool_input.file_path; if ($f -match '\\.sql$') { if (Get-Command sqlfluff -ErrorAction SilentlyContinue) { & sqlfluff fix --dialect ansi $f } else { Write-Output 'sqlfluff not installed - skipping SQL lint' } }; exit 0"
+            "statusMessage": "Linting SQL..."
           }
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {}
 }

@@ -5,7 +5,9 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "sdlc-mcp-server": "dist/index.js"
+    "sdlc-mcp-server": "dist/index.js",
+    "sdlc": "dist/cli.js",
+    "sdlc-audit": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",

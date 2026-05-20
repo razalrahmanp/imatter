@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const cmd=i.command||'';const isMigration=/migrat|schema[\\s-_]?push|prisma.*deploy|prisma.*dev|knex.*latest|knex.*migrate|psql.*-f|db.*push|alter\\s+table|drop\\s+table|drop\\s+column/i.test(cmd);if(isMigration){process.stderr.write('\\n⚠ MIGRATION HOOK TRIGGERED\\n'+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n'+'Command : '+cmd+'\\n'+'\\nWhat this will do:\\n'+'  - Modify the database schema on the connected RDS instance\\n'+'  - Changes may be irreversible (column drops, type changes)\\n'+'  - Affects ALL branches sharing this database\\n'+'\\nDo NOT approve unless you have:\\n'+'  1. Read the migration file and know every change it makes\\n'+'  2. Confirmed there is a rollback plan\\n'+'  3. Verified this is the correct environment (dev/staging/prod)\\n'+'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n');process.exit(2);}}catch(e){}});\""
+          }
+        ]
+      }
+    ]
+  }
+}
