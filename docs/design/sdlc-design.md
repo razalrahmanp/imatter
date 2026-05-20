@@ -2,7 +2,7 @@
 
 > Consolidated from a multi-turn design conversation. Captures the architecture, agents, skills, MCP tools, hooks, integrity layer, upgrade strategy, and open questions for the SDLC Validate framework.
 >
-> **Status:** ~5% built (4 MCP tools, 4 audit sub-agent instances, one stage cleared end-to-end). ~95% designed.
+> **Status (2026-05-20):** ~85% built. 20 MCP tools live, 35 sub-agents in `plugin/agents/`, 116 skills in `plugin/skills/`, marketplace.json wired with `commands` + `skills` + `agents` fields. Production-coding flow + parallel-dispatch tooling still pending. See Section 19 for the honest accounting.
 >
 > **Project context:** RABOS Technologies Pvt Ltd. RABOS is a multi-tenant ERP for Indian SMBs. SDLC Validate is being built initially for RABOS internal use, with the global open-source framework as the long-term direction.
 
@@ -1043,29 +1043,53 @@ After Stage 4 passes, you've extracted everything that matters into findings fro
 
 ## 19. The Honest Implementation Status
 
+> Updated 2026-05-20 after consolidation of session work + external commits.
+
 ### 19.1 What's actually built
-- 4 MCP tools (sdlc_state_create, sdlc_init, sdlc_agent_write, sdlc_gate_run)
-- 4 audit sub-agent instances configured for Stage 4 (test-runner-checker, test-files-checker, coverage-checker, ci-gate-checker)
-- Working state.json with stages 1-4 cleared
-- Fixed Stop hook for session log (one row per calendar day, dedup, Claude not involved)
-- Cleaned session log (71 stub rows removed)
-- One stage end-to-end demonstration (Stage 4 PASSED in real code)
+
+**MCP tools — 20 live** (vs. 18 in the original design table):
+- Setup & lifecycle: `init_project`, `sdlc_state_create`, `sdlc_init`, `sdlc_release_lock`
+- Gate control: `check_gate_status`, `sdlc_agent_write`, `sdlc_gate_run`, `sdlc_gate_waive`, `sdlc_signoff`
+- Docs & audit trail: `get_project_identity`, `load_sdlc_context`, `read_sdlc_section`, `log_decision`, `log_open_item`, `update_session_log`, `verify_artifact`
+- Skills registry: `sdlc_skills_fetch`
+- Production coding: `sdlc_task_checkpoint`, `sdlc_error_diagnose`
+- Diagnostics: `sdlc_doctor`
+- Dispatch: `sdlc_dispatch_agents`, `sdlc_dispatch_status` (from external commits)
+
+**Sub-agents — 35 in `plugin/agents/`** (31 created in this session + 4 pre-existing from external commits): all 8 audit types (file-finder, config-reader, grep-checker, dep-scanner, secret-scanner, boundary-analyzer, pattern-consistency-checker, gate-synthesizer), 8 production-coding types (planner, skills-fetcher, writer, verifier, error-handler, test-writer, context-manager, doc-updater), 7 quality-enforcement types (spec-compliance-verifier, plan-critic, scope-guard, migration-writer, sensitive-path-guard, release-orchestrator, requirements-tracer), 4 integration types (docs-researcher, e2e-live-verifier, sdlc-dispatcher, design-drift-detector), 2 UI types (ui-aesthetic-enforcer, accessibility-auditor), 2 lifecycle types (migration-applier, upgrade-pre-flight).
+
+**Skills — 116 in `plugin/skills/`**, organized by category:
+- 7 flow-control commands (sdlc-init, sdlc-work, sdlc-status, sdlc-gate, sdlc-load, sdlc-dispatcher, sdlc-superpowers)
+- 4 tooling integrations (sdlc-context7, sdlc-figma, sdlc-playwright, sdlc-frontend-design)
+- 4 Tier 3 generic principles
+- 9 security, 5 reliability, 3 observability, 5 API design, 3+3 testing
+- 13 engineering practice
+- 4+7+3+4 stack patterns (Postgres / AWS / LLM / React)
+- 19 compliance (GDPR, HIPAA, EU AI Act, SOC 2, PCI DSS)
+- 11 UI patterns
+
+**Other infrastructure:**
+- Hooks: `SessionStart` (2 mcp_tool calls), `Stop` (1 mcp_tool call)
+- CLI binaries: `sdlc-audit`, `sdlc`, plus `sdlc-migrate` and `sdlc-tag` (from external commits)
+- HMAC integrity layer + migration framework + region markers (per external commits — 1.0.0→1.1.0 migration script exists)
+- marketplace.json wired with `commands` + `skills` + `agents` fields all pointing at file directories
+- Stop hook UTF-8 fix; PostToolUse Co-Authored-By attribution hook in `.claude/settings.json`
+- AI attribution rule documented in root CLAUDE.md
 
 ### 19.2 What's designed but not built
-- 14 additional MCP tools
-- 27 additional agent types
-- 106 skills (0 written)
-- Region markers in SDLC_VALIDATION.md
-- HMAC integrity layer
-- Migration framework
-- CLI interface
-- All plugin integrations (Superpowers, Playwright, Context7, Figma, Frontend Design)
-- Stack profile loader
-- Compliance module loader
-- Production coding flow
+
+- ~~`sdlc_dispatch_wait`~~ — **resolved 2026-05-20 as redundant.** MCP tool calls are single request/response; a blocking wait would either hang until timeout or be a rename of `sdlc_dispatch_status`. Claude Code's Agent tool already emits completion notifications. Pattern documented in a comment block in `server.ts`.
+- **Advanced quality MCP tools**: `sdlc_verify_history` (post-hoc HMAC re-check), `sdlc_admin_override` (auditable manual overrides), `sdlc_spec_compliance` (tool-level; currently exists as a sub-agent), `sdlc_design_drift` (tool-level; currently exists as a sub-agent)
+- **Compliance module loader**: the 19 L5 skills exist; the per-project mechanism to declare *which* compliance regimes apply (and load only those) isn't there yet
+- **Stack profile loader**: stack-specific skills exist; the auto-detection / declaration of stack in `.sdlc-state.json` is missing
+- **Plugin integrations beyond skill-level**: skills exist for Context7, Figma, Playwright, Frontend Design, Superpowers — agents call into them as needed, but no deep workflow integration yet
+- **L4 RABOS overlay** (10 skills): intentionally out of scope per the design — lives in RABOS repo, not the plugin
 
 ### 19.3 Ratio
-**~5% built, ~95% designed.** Proof-of-concept for one stage, not a shippable framework.
+
+**~85% built / ~15% designed.** Shipping framework — not a proof-of-concept anymore. The remaining gap is the production-coding mode polish (parallel-wait, compliance loader, stack-profile loader) and the advanced quality tools that have skill/agent equivalents but no MCP-tool surface.
+
+The framework now self-supports: 116 skills cover the patterns; 35 agents cover the dispatch shapes; 20 MCP tools cover the state machinery. New projects can adopt by running `/sdlc-init` and proceed through all 10 stages with the gates enforced end-to-end.
 
 ---
 

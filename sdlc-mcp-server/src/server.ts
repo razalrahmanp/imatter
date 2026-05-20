@@ -1718,6 +1718,21 @@ export function createServer(): McpServer {
     }
   );
 
+  // sdlc_dispatch_wait — deliberately NOT implemented.
+  //
+  // Rationale: an MCP tool call is a single request/response. A "blocking wait"
+  // would either (a) hang the request until timeout, which is hostile to clients
+  // and may exceed transport timeouts, or (b) be a thin rename of sdlc_dispatch_status.
+  // Claude Code's Agent tool already emits task-completion notifications back to the
+  // parent session, so the orchestrator pattern is:
+  //   1. sdlc_dispatch_agents → returns the checklist
+  //   2. Parent dispatches via Claude Code's Agent tool (run_in_background optional)
+  //   3. Parent receives auto-notifications as each sub-agent completes
+  //   4. Parent calls sdlc_dispatch_status once when all expected agents have signaled
+  //      (or periodically if running independently)
+  //   5. sdlc_gate_run synthesizes the verdict
+  // This pattern works today without sdlc_dispatch_wait.
+
   // ── RESOURCES ──────────────────────────────────────────────────────────────
 
   server.resource(

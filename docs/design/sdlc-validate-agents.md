@@ -1,5 +1,7 @@
 # SDLC Validate — Agent Inventory
 
+> **Build status (2026-05-20):** All 31 agent types in this document are now implemented as markdown files in `plugin/agents/`, with `marketplace.json` registering the directory via `agents: ["./agents/"]`. Each file has YAML frontmatter (`name`, `description`, `tools`, `model`) and a process / input / output specification. The 4 originally-built Stage-4-only instances (test-runner-checker, test-files-checker, coverage-checker, ci-gate-checker) remain as project-data examples in `.sdlc-state.json` schemas, not as separate files.
+
 ## Audit Agents (8) — reused across all 10 stages
 
 | ID | Agent | Model | Reused in stages | Purpose |

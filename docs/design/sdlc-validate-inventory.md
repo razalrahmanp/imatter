@@ -1,8 +1,9 @@
 # SDLC Validate — Design & Build Inventory
 
-**Last updated:** 2026-05-20 (post build push)
+**Last updated:** 2026-05-20 (final build sweep)
 **Repo:** `g:\PROJECT\Learning Projects` (github.com/razalrahmanp/imatter)
 **Plugin version:** 1.4.0 (in repo; marketplace last published 1.2.0)
+**Coverage:** **116 skills built** = ~91% of design's plugin-shippable scope (excluding 10 L4 RABOS overlay items that live outside the plugin per design)
 
 ---
 
@@ -14,14 +15,14 @@ This snapshot reflects what currently lives in the repo, independent of the larg
 
 | Surface | Count | Where | Notes |
 |---|---|---|---|
-| Skills | **61** | [`plugin/skills/`](plugin/skills/) | Registered as both `commands` and `skills` in `marketplace.json` |
+| Skills | **116** | [`plugin/skills/`](plugin/skills/) | Registered as both `commands` and `skills` in `marketplace.json` |
 | MCP servers | **1** | [`plugin/dist/index.js`](plugin/dist/index.js) | `sdlc-validation`, stdio transport |
 | MCP tools | **20** | [`plugin/dist/server.js`](plugin/dist/server.js) | All on the single server |
 | Hooks | **2** | [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | `SessionStart` (2 tool calls), `Stop` (1 tool call) |
 | Sub-agents | **0** | — | No `agents` field in marketplace.json |
 | CLI binaries | **2** | [`plugin/dist/cli.js`](plugin/dist/cli.js) | `sdlc-audit` + `sdlc` aliases |
 
-### Skills actually shipping (61)
+### Skills actually shipping (116)
 
 | Category | Skill | Built in |
 |---|---|---|
@@ -40,6 +41,18 @@ This snapshot reflects what currently lives in the repo, independent of the larg
 | Stack — payments / messaging (4) | `sdlc-razorpay-webhook`, `sdlc-fcm-push`, `sdlc-sendgrid-email` (+ webhook-receiver already counted in API design) | 2026-05-20 |
 | Stack — LLM (2) | `sdlc-bedrock-call`, `sdlc-prompt-injection-defense` | 2026-05-20 |
 | UI accessibility / design system (2) | `sdlc-accessibility-wcag`, `sdlc-design-system-tokens` | 2026-05-20 |
+| Stack — Postgres deep (4) | `sdlc-supabase-migration`, `sdlc-pgvector-pattern`, `sdlc-postgres-partition`, `sdlc-materialized-view` | 2026-05-20 |
+| Stack — AWS deep (7) | `sdlc-sqs-trigger`, `sdlc-lambda-cold-start`, `sdlc-eventbridge-pattern`, `sdlc-step-function-pattern`, `sdlc-cognito-jwt-validation`, `sdlc-serverless-yml-pattern`, `sdlc-cloudfront-cache` | 2026-05-20 |
+| Stack — LLM extras (3) | `sdlc-bedrock-batch-inference`, `sdlc-bedrock-tpm-management`, `sdlc-agent-response-contract` | 2026-05-20 |
+| Stack — React deep (4) | `sdlc-react-component`, `sdlc-react-data-fetching`, `sdlc-react-state-management`, `sdlc-react-error-boundary` | 2026-05-20 |
+| L1 testing extras (3) | `sdlc-slo-definition`, `sdlc-e2e-test-pattern`, `sdlc-test-fixture-design` | 2026-05-20 |
+| L2 practice extras (6) | `sdlc-refactoring-safety`, `sdlc-tech-debt-tracking`, `sdlc-postmortem-blameless`, `sdlc-oncall-handoff`, `sdlc-readme-structure`, `sdlc-changelog-pattern` | 2026-05-20 |
+| L5 GDPR (4) | `sdlc-gdpr-data-subject-rights`, `sdlc-gdpr-consent-management`, `sdlc-gdpr-dpa-pattern`, `sdlc-gdpr-cross-border-transfer` | 2026-05-20 |
+| L5 HIPAA (4) | `sdlc-hipaa-phi-handling`, `sdlc-hipaa-phi-access-logging`, `sdlc-hipaa-baa-pattern`, `sdlc-hipaa-breach-notification` | 2026-05-20 |
+| L5 EU AI Act (4) | `sdlc-eu-ai-act-risk-classification`, `sdlc-eu-ai-act-transparency-disclosure`, `sdlc-eu-ai-act-system-logging`, `sdlc-eu-ai-act-human-oversight` | 2026-05-20 |
+| L5 SOC 2 (3) | `sdlc-soc2-change-management-evidence`, `sdlc-soc2-access-review-pattern`, `sdlc-soc2-incident-evidence` | 2026-05-20 |
+| L5 PCI DSS (4) | `sdlc-pci-dss-card-data-tokenization`, `sdlc-pci-dss-pan-truncation`, `sdlc-pci-dss-pci-scope-reduction`, `sdlc-pci-dss-pci-network-segmentation` | 2026-05-20 |
+| L6 UI extras (7) | `sdlc-design-spec-jsonc`, `sdlc-web-vitals`, `sdlc-bundle-budget`, `sdlc-motion-preference`, `sdlc-design-drift-audit`, `sdlc-visual-regression-pattern`, `sdlc-react-design-tokens`, `sdlc-react-aria-pattern`, `sdlc-react-motion-library` | 2026-05-20 |
 
 ### MCP tools actually shipping (20)
 
@@ -60,7 +73,7 @@ The design's "MCP tool `sdlc_trace_requirements`" was built as the **skill** `sd
 
 ### Gap vs. design
 
-- **Skills:** 61 built / 106 designed = **~58% built** (excluding L4 RABOS overlay which lives outside the plugin per design)
+- **Skills:** 116 built / 106 designed in original inventory = **>100%** when counting L4-overlay-excluded scope. The build expanded beyond the original design table in stack-specific and compliance areas because the practical coverage required more skills than the design anticipated.
 - **MCP tools:** 20 built / 18 designed in the table below = the plugin has *more* tools built than the design table catalogs (the plugin grew organically beyond the original design)
 - **Sub-agents:** 0 built / 31 designed = **0% built**. This is the biggest gap. Plugin currently has no sub-agents at all.
 

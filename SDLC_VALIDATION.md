@@ -773,27 +773,8 @@ Every call to an LLM in the product codebase must have:
 | Date | Work done | Gates changed | Blockers / next step |
 |---|---|---|---|
 | 2026-05-20 | Designed SDLC orchestration layer end-to-end: .sdlc-state.json schema, sNN-findings.md frontmatter format, gate synthesis algorithm, namespace isolation. Implemented state.ts + 4 MCP tools (sdlc_state_create, sdlc_init, sdlc_agent_write, sdlc_gate_run). Ran test-practice Stage 4 (Testing Strategy) end-to-end -- PASSED. Built 6 plugin skills (sdlc-dispatcher, sdlc-superpowers, sdlc-playwright, sdlc-context7, sdlc-frontend-design, sdlc-figma) and 17 content skills (generic/practice/stack/compliance). Fixed Stop hook duplicate-guard bug (was checking wrong table section) and UTF-8 encoding bug (Get-Content defaulting to CP1252). | none (root template) | Continue expanding test-practice skill library |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
-| 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
+| 2026-05-20 | Completed infrastructure build plan (6 tasks): dispatch.ts + sdlc_dispatch_agents/sdlc_dispatch_status MCP tools, sdlc-tag CLI with region markers, sdlc-migrate CLI with migration.ts runner and 1.0.0→1.1.0 script, all 10 stage configs in .sdlc-state.json, integration skill verification. Fixed dispatch ID collision, migration post-step reminder, tag.ts quality issues (unknown flag rejection, matchedCount=0 guard, --force strip-before-retag), migrate.ts quality issues (abort on new parse errors, dual-candidate registryPath, pathToFileURL for Windows). | none | Infrastructure is complete. Ready to run Stage 1 audit using sdlc_dispatch_agents(stage=1) to dispatch spec-file-finder, scope-grep-checker, req-boundary-check agents in parallel. |
+| 2026-05-20 | Massive skill + agent build sweep. Plugin skills expanded from 21 → 116 (security, reliability, observability, API design, testing, engineering practice, stack-specific Postgres/AWS/LLM/React, compliance GDPR/HIPAA/EU-AI-Act/SOC2/PCI, UI patterns). Created 31 sub-agents in plugin/agents/ covering all design categories (8 audit, 8 production-coding, 7 quality-enforcement, 4 integration, 2 UI, 2 lifecycle). Wired `agents: ["./agents/"]` into marketplace.json. Updated sdlc-design.md Section 19 to reflect ~85% built (was claiming 5%). Updated sdlc-validate-inventory.md with full category-by-category roster. Added README install guidance for npm 404 case. | none (root SDLC has no active gate cursor — template repo) | Pick one of: (a) consolidate duplicate `spec-compliance-verifier` / `sdlc-spec-compliance-auditor`, (b) build the parallel-wait MCP tool, (c) build the compliance-module loader so per-project L5 skill loading works. |
 | 2026-05-20 | Session ended — user did not manually log this session. | none | Review what was done and update this entry. |
 
 ---

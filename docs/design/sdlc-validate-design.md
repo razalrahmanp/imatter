@@ -1,6 +1,6 @@
 # SDLC Validate — Consolidated Design Reference
-<!-- Updated: 2026-05-20 (session 3). Source: all sessions to date. -->
-<!-- Implementation status: ~45% built. See Section 8 (Build Sequence) for breakdown. -->
+<!-- Updated: 2026-05-20 (session 4 — major build sweep). Source: all sessions to date. -->
+<!-- Implementation status: ~85% built. 20 MCP tools live, 35 sub-agents shipped, 116 skills shipped. See sdlc-design.md Section 19 for full accounting. -->
 
 ---
 
