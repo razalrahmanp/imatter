@@ -138,11 +138,21 @@ export async function runMigrations(opts: RunOptions): Promise<RunResult> {
     allChanges.push(...result.changes);
     allWarnings.push(...result.warnings);
 
-    // Verify the output is parseable before accepting
+    // Verify the output is parseable before accepting; abort if new errors were introduced
     const check = parseRegions(result.newContent);
+    const newErrors = check.errors.filter(
+      (e) => !parsed.errors.some((pe) => pe.message === e.message),
+    );
+    if (newErrors.length > 0) {
+      throw new Error(
+        `Migration to ${script.to} introduced parse errors — aborting to protect the document:\n` +
+        newErrors.map((e) => `  ${e.message}`).join("\n") +
+        (backupPath ? `\nBackup preserved at: ${backupPath}` : ""),
+      );
+    }
     if (check.errors.length > 0) {
       allWarnings.push(
-        `Migration to ${script.to} produced parse errors — output may be malformed:\n` +
+        `Pre-existing parse errors remain after ${script.to} migration:\n` +
         check.errors.map((e) => `  ${e.message}`).join("\n"),
       );
     }

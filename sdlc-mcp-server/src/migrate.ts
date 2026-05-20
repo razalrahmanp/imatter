@@ -18,7 +18,7 @@
 
 import { readFileSync, existsSync, copyFileSync, readdirSync, statSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseRegions, hashContent } from "./regions.js";
 import { runMigrations, type MigrationScript, type RunResult } from "./migration.js";
 import { deserializeRegistry } from "./template-generator.js";
@@ -71,8 +71,7 @@ async function loadMigrationScripts(): Promise<MigrationScript[]> {
   for (const file of files) {
     const fullPath = join(migrationsDir, file);
     try {
-      // Dynamic import — file is built into JS at runtime
-      const mod = await import(`file://${fullPath.replace(/\\/g, "/")}`);
+      const mod = await import(pathToFileURL(fullPath).href);
       if (mod.migration) scripts.push(mod.migration as MigrationScript);
     } catch (e) {
       process.stderr.write(`Warning: Failed to load migration ${file}: ${String(e)}\n`);
@@ -102,20 +101,24 @@ function getClientVersion(sdlcContent: string, projectRoot: string): string {
   return "1.0.0";
 }
 
-function getInstalledVersion(): string {
-  const candidates = [
-    join(__dirname, "../../plugin/template/registry.json"),
-    join(__dirname, "../template/registry.json"),
-  ];
-  for (const p of candidates) {
-    if (existsSync(p)) {
-      try {
-        const { version } = deserializeRegistry(readFileSync(p, "utf-8"));
-        return version;
-      } catch { /* fall through */ }
-    }
+const REGISTRY_CANDIDATES = [
+  join(__dirname, "../../plugin/template/registry.json"),
+  join(__dirname, "../template/registry.json"),
+];
+
+function resolveRegistryPath(): string | null {
+  for (const p of REGISTRY_CANDIDATES) {
+    if (existsSync(p)) return p;
   }
-  return "1.0.0";
+  return null;
+}
+
+function getInstalledVersion(): string {
+  const p = resolveRegistryPath();
+  if (!p) return "1.0.0";
+  try {
+    return deserializeRegistry(readFileSync(p, "utf-8")).version;
+  } catch { return "1.0.0"; }
 }
 
 // ── Unauthorized-edit detection ───────────────────────────────────────────────
@@ -407,7 +410,7 @@ async function main(): Promise<void> {
   }
 
   // Apply
-  const registryPath = join(__dirname, "../../plugin/template/registry.json");
+  const registryPath = resolveRegistryPath() ?? join(__dirname, "../../plugin/template/registry.json");
 
   let result: RunResult;
   try {
