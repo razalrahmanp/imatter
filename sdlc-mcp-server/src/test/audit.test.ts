@@ -1,8 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 import { buildHistoryVerifyReport } from "../audit.js";
 import { traceRequirementsInDoc } from "../audit.js";
 import type { GateStatus } from "../sdlc.js";
@@ -209,4 +210,28 @@ test("traceRequirementsInDoc: hit text is trimmed", () => {
   const matches = traceRequirementsInDoc(SAMPLE_DOC, "FR-1.2", false, GATE_STATUSES);
   const hitText = matches[0].hits[0].text;
   assert.equal(hitText, hitText.trim(), "hit text must be trimmed");
+});
+
+// ── Integration: real project state ──────────────────────────────────────────
+// Smoke tests against the actual .sdlc-state.json and SDLC_VALIDATION.md.
+// Verifies the tools don't crash — does NOT assert specific gate verdicts.
+
+const PROJECT_ROOT = resolve(fileURLToPath(import.meta.url), "../../../../");
+
+test("integration: buildHistoryVerifyReport does not throw on real project state", () => {
+  const report = buildHistoryVerifyReport(PROJECT_ROOT);
+  assert.ok(typeof report.ok === "boolean");
+  assert.ok(Array.isArray(report.entries));
+  assert.ok(Array.isArray(report.errors));
+  assert.ok(Array.isArray(report.warnings));
+});
+
+test("integration: traceRequirementsInDoc finds matches on real SDLC_VALIDATION.md", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { getGateStatuses } = await import("../sdlc.js");
+  const sdlcPath = resolve(PROJECT_ROOT, "SDLC_VALIDATION.md");
+  const content = readFileSync(sdlcPath, "utf-8").replace(/\r\n/g, "\n");
+  const gates = getGateStatuses(content);
+  const matches = traceRequirementsInDoc(content, "Stage", false, gates);
+  assert.ok(matches.length > 0, "real SDLC doc must have sections mentioning 'Stage'");
 });
