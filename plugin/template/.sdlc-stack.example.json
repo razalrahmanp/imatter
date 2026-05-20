@@ -1,0 +1,13 @@
+{
+  "// note": "Copy this file to .sdlc-stack.json at your project root and edit. The plugin reads it to resolve the skill registry and the active compliance regimes.",
+
+  "stack": "react-supabase-lambda",
+  "// stack note": "Identifier of the stack profile to use. Determines which stack-specific skills (e.g. supabase-rls, lambda-worker) are 'active' for this project. Leave blank or omit if the project doesn't match a profile.",
+
+  "project_overlay": null,
+  "// overlay note": "Optional project-specific skill overlay directory under skills/project/. Used for cross-cutting project conventions (RABOS-style). null or omitted = no overlay.",
+
+  "compliance": [],
+  "// compliance note": "List the compliance regimes this project must satisfy. Known modules: gdpr, hipaa, soc2, pci-dss, eu-ai-act, wcag, accessibility-us, accessibility-eu. The plugin's compliance skills (sdlc-{module}-*.md) become 'active' for declared modules; others are out-of-scope but remain available.",
+  "// compliance example": "[\"gdpr\", \"soc2\"]"
+}

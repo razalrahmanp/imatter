@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { resolveProjectRoot, findSdlcFile, readSdlcContent, getGateStatuses, getSdlcSection, appendTableRow, artifactInfo, regenerateQuickReference, } from "./sdlc.js";
 import { ensureKey, acquireLock, releaseLock, fileHash } from "./integrity.js";
 import { readDispatch, writeDispatch, makeDispatchId, } from "./dispatch.js";
+import { KNOWN_MODULES, computeComplianceStatus, formatComplianceStatus, } from "./compliance.js";
 import { FRAMEWORK_VERSION, readState, writeState, ensureSessionDir, parseFrontmatter, extractExport, runGateSynthesis, readTask, writeTask, taskDir, diagnoseError, } from "./state.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // ── Section 0 protocol rules shipped as a reusable constant ───────────────────
@@ -485,6 +486,24 @@ export function createServer() {
                             (moduleNote ? `\n\nModule-specific note:\n${moduleNote.trim()}` : "") +
                             (related ? `\nRelated skills: ${related}` : ""),
                     }],
+            };
+        }
+        catch (err) {
+            return { content: [{ type: "text", text: String(err) }], isError: true };
+        }
+    });
+    server.tool("sdlc_compliance_status", "Report which compliance modules are declared for this project (in .sdlc-stack.json#compliance), " +
+        "which shipping compliance skills are active per declared module, and which compliance skills " +
+        "are present in the plugin but out of scope for this project. " +
+        `Known modules: ${KNOWN_MODULES.join(", ")}.`, {
+        project_root: z.string().optional(),
+    }, async ({ project_root }) => {
+        try {
+            const root = resolveProjectRoot(project_root);
+            const pluginSkillsDir = path.join(__dirname, "..", "..", "skills");
+            const status = computeComplianceStatus(root, pluginSkillsDir);
+            return {
+                content: [{ type: "text", text: formatComplianceStatus(status) }],
             };
         }
         catch (err) {
@@ -1435,6 +1454,20 @@ export function createServer() {
             return { content: [{ type: "text", text: String(err) }], isError: true };
         }
     });
+    // sdlc_dispatch_wait — deliberately NOT implemented.
+    //
+    // Rationale: an MCP tool call is a single request/response. A "blocking wait"
+    // would either (a) hang the request until timeout, which is hostile to clients
+    // and may exceed transport timeouts, or (b) be a thin rename of sdlc_dispatch_status.
+    // Claude Code's Agent tool already emits task-completion notifications back to the
+    // parent session, so the orchestrator pattern is:
+    //   1. sdlc_dispatch_agents → returns the checklist
+    //   2. Parent dispatches via Claude Code's Agent tool (run_in_background optional)
+    //   3. Parent receives auto-notifications as each sub-agent completes
+    //   4. Parent calls sdlc_dispatch_status once when all expected agents have signaled
+    //      (or periodically if running independently)
+    //   5. sdlc_gate_run synthesizes the verdict
+    // This pattern works today without sdlc_dispatch_wait.
     // ── RESOURCES ──────────────────────────────────────────────────────────────
     server.resource("sdlc-validation", "sdlc://validation", { description: "Full SDLC_VALIDATION.md for the current project", mimeType: "text/markdown" }, async (uri) => {
         const root = resolveProjectRoot();

@@ -1080,8 +1080,8 @@ After Stage 4 passes, you've extracted everything that matters into findings fro
 
 - ~~`sdlc_dispatch_wait`~~ — **resolved 2026-05-20 as redundant.** MCP tool calls are single request/response; a blocking wait would either hang until timeout or be a rename of `sdlc_dispatch_status`. Claude Code's Agent tool already emits completion notifications. Pattern documented in a comment block in `server.ts`.
 - **Advanced quality MCP tools**: `sdlc_verify_history` (post-hoc HMAC re-check), `sdlc_admin_override` (auditable manual overrides), `sdlc_spec_compliance` (tool-level; currently exists as a sub-agent), `sdlc_design_drift` (tool-level; currently exists as a sub-agent)
-- **Compliance module loader**: the 19 L5 skills exist; the per-project mechanism to declare *which* compliance regimes apply (and load only those) isn't there yet
-- **Stack profile loader**: stack-specific skills exist; the auto-detection / declaration of stack in `.sdlc-state.json` is missing
+- ~~**Compliance module loader**~~ — **shipped 2026-05-20.** `sdlc_skills_fetch` already read `.sdlc-stack.json#compliance`. Added `compliance.ts` (KNOWN_MODULES enum, prefix-based skill discovery) and `sdlc_compliance_status` MCP tool that returns: declared modules, active skills per module, out-of-scope skills, validation warnings for unknown modules. Plugin ships `.sdlc-stack.example.json` template documenting the schema.
+- **Stack profile loader**: same mechanism handles `stack: "..."` in `.sdlc-stack.json` (already wired into `sdlc_skills_fetch`'s search-path resolution). The remaining gap is **auto-detection** — currently the user declares the stack manually. Auto-detection from `package.json` deps / dockerfile / etc. would be a follow-up.
 - **Plugin integrations beyond skill-level**: skills exist for Context7, Figma, Playwright, Frontend Design, Superpowers — agents call into them as needed, but no deep workflow integration yet
 - **L4 RABOS overlay** (10 skills): intentionally out of scope per the design — lives in RABOS repo, not the plugin
 

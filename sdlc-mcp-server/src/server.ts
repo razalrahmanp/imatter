@@ -22,6 +22,11 @@ import {
   makeDispatchId,
 } from "./dispatch.js";
 import {
+  KNOWN_MODULES,
+  computeComplianceStatus,
+  formatComplianceStatus,
+} from "./compliance.js";
+import {
   FRAMEWORK_VERSION,
   readState,
   writeState,
@@ -610,6 +615,29 @@ export function createServer(): McpServer {
               (moduleNote ? `\n\nModule-specific note:\n${moduleNote.trim()}` : "") +
               (related ? `\nRelated skills: ${related}` : ""),
           }],
+        };
+      } catch (err) {
+        return { content: [{ type: "text", text: String(err) }], isError: true };
+      }
+    }
+  );
+
+  server.tool(
+    "sdlc_compliance_status",
+    "Report which compliance modules are declared for this project (in .sdlc-stack.json#compliance), " +
+      "which shipping compliance skills are active per declared module, and which compliance skills " +
+      "are present in the plugin but out of scope for this project. " +
+      `Known modules: ${KNOWN_MODULES.join(", ")}.`,
+    {
+      project_root: z.string().optional(),
+    },
+    async ({ project_root }) => {
+      try {
+        const root = resolveProjectRoot(project_root);
+        const pluginSkillsDir = path.join(__dirname, "..", "..", "skills");
+        const status = computeComplianceStatus(root, pluginSkillsDir);
+        return {
+          content: [{ type: "text", text: formatComplianceStatus(status) }],
         };
       } catch (err) {
         return { content: [{ type: "text", text: String(err) }], isError: true };

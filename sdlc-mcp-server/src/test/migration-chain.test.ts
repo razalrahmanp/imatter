@@ -182,26 +182,26 @@ test("runMigrations: idempotent — second run does not duplicate the version ma
       dryRun: false,
     });
 
-    // Second run — re-reads from disk (which now has the marker)
+    // Second run: caller correctly bumps fromVersion to 1.1.0
+    // The runner's filter skips the script entirely (1.1.0 > 1.1.0 = false)
     const result2 = await runMigrations({
       projectRoot: dir,
       sdlcPath,
-      fromVersion: "1.0.0",
+      fromVersion: "1.1.0",
       toVersion: "1.1.0",
       scripts: [migration],
       registryPath: join(dir, "nonexistent-registry.json"),
       dryRun: false,
     });
 
-    const markerCount = (
-      result2.finalContent.match(/<!-- SDLC:version "1\.1\.0" -->/g) ?? []
-    ).length;
-    assert.equal(markerCount, 1, "version marker must appear exactly once after two runs");
+    assert.equal(result2.steps.length, 0, "runner must skip all scripts when already at target version");
+    assert.equal(result2.backupPath, null, "no backup when no migration runs");
+    assert.equal(result2.allChanges.length, 0, "no changes when no migration runs");
 
-    assert.ok(
-      result2.allWarnings.some((w) => w.includes("already present")),
-      "second run must warn that the marker is already present",
-    );
+    // The on-disk file must still have exactly one marker from the first run
+    const onDisk = readFileSync(sdlcPath, "utf-8");
+    const markerCount = (onDisk.match(/<!-- SDLC:version "1\.1\.0" -->/g) ?? []).length;
+    assert.equal(markerCount, 1, "version marker must appear exactly once on disk after two runs");
   } finally {
     cleanup(dir);
   }
@@ -226,6 +226,7 @@ test("runMigrations: no-op when fromVersion already equals toVersion", async () 
     assert.equal(result.steps.length, 0, "no steps should run when already at target version");
     assert.equal(result.backupPath, null, "no backup when no migration runs");
     assert.equal(result.allChanges.length, 0);
+    assert.equal(result.finalVersion, "1.1.0", "finalVersion must equal fromVersion on no-op path");
   } finally {
     cleanup(dir);
   }
