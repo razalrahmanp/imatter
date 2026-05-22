@@ -1,5 +1,5 @@
 # SDLC Validation & Control Document
-> **Boilerplate version 2.0 — copy this file to the root of every new project.**
+> **Boilerplate version 2.1 — copy this file to the root of every new project.**
 > Fill in every `[PLACEHOLDER]` before the first session. Claude reads this at session start and is bound by it.
 
 ---
@@ -8,6 +8,34 @@
 
 These rules govern every action Claude takes in this repository. They are not suggestions.
 
+### Task tier — classify before applying rules
+
+Apply rules 0.0–0.6 in full to **feature**-tier work. **Trivial**-tier work skips the parts noted below.
+
+**Trivial** — pick this only if ALL of these hold:
+- Single-file edit (or a handful of mechanically identical edits)
+- No public interface change (no exported signature, no API route, no schema)
+- No user-visible behavior change (comments, log strings, formatting, internal helpers only)
+- Under 15 minutes of effort
+- Not in the 0.6 Forbidden list
+- Not in critical-path code (auth, persistence, billing, tenant isolation)
+
+**Feature** — anything else. When in doubt, feature.
+
+Trivial-tier work **skips**:
+- Section 14 Decision Log entries
+- Section 15 Open Items negotiation for sibling improvements in the same file
+- `file:line` citation discipline on routine findings (still cite for gate-passing claims and deviation reports)
+- Gate pre-checks — trivial work does not advance a stage
+
+Trivial-tier work **still respects**:
+- 0.6 Forbidden — destructive or shared-state actions always require approval
+- 0.1 Verification — never guess at file contents
+- AI attribution on commits
+- Section 18 Session Log — one entry per session, not per task
+
+If a trivial task grows mid-stream (touches a public interface, becomes the third "small" edit in the same area, exceeds 15 min), stop and re-classify as feature.
+
 ### 0.0 Path resolution — Claude fills placeholders, not the user
 Every `[PATH]` placeholder in this document (e.g. `[SPEC_PATH]`, `[ARCH_DOC_PATH]`, `[CI_CONFIG]`) is a slot Claude resolves at the start of each session by reading the repository. Claude uses `ls`, `find`, or `Glob` to locate the likely file, confirms it is the correct one by reading the first few lines, then replaces the placeholder with the real path and a `file:line` citation. If a path cannot be found, Claude marks it `UNVERIFIED` and asks — it never invents a path.
 
@@ -15,7 +43,7 @@ The user does NOT manually type file paths. If a required artifact does not yet 
 
 ### 0.1 Verification over assertion
 - Never assume a file, function, config value, or dependency exists. Read it or grep for it.
-- Every finding must be cited as `file:line`. A finding with no citation is not a finding.
+- Cite `file:line` when the finding (a) passes a gate criterion, (b) reports a deviation between docs and code, or (c) is the basis for an action the user will take. Routine reads for context don't need ceremonial citation.
 - If something cannot be verified from the codebase, mark it `UNVERIFIED` — never guess.
 
 ### 0.2 Gate discipline
@@ -26,12 +54,14 @@ The user does NOT manually type file paths. If a required artifact does not yet 
 
 ### 0.3 Scope discipline
 - Only implement what is explicitly listed in the current stage's approved scope.
-- Do not add features, refactor surrounding code, introduce abstractions, or fix unrelated issues unless the user explicitly approves each item.
-- If you notice something outside scope that should be fixed, log it in **Section 15 (Open Items)** and ask — do not fix silently.
+- Do not add new features, change public interfaces, or introduce new dependencies without approval.
+- Small in-place improvements in a file you're already editing — renaming a poorly named variable, fixing a typo, deleting an unused import — are allowed without negotiation if they're under ~10 lines and don't change behavior.
+- If you notice something larger outside scope, log it in **Section 15 (Open Items)** and ask — do not fix silently.
 
 ### 0.4 Decision discipline
-- Every significant decision (technology choice, pattern, architectural trade-off, scope change) must be logged in **Section 14 (Decision Log)** before acting on it.
-- If you are about to make a decision not already in the log, stop and ask the user to approve it first.
+- Log decisions in **Section 14 (Decision Log)** when they crystallize.
+- **Log before acting** for hard-to-reverse choices: schema design, dependency addition or removal, framework choice, security or auth pattern, public API shape.
+- **Log after the code proves it** for reversible choices: internal patterns, file layout, naming conventions, refactor approach. Don't pre-commit to a design on paper if working code will tell you faster.
 - Do not re-litigate logged decisions. If a decision in the log is wrong, raise it explicitly — do not silently deviate from it.
 
 ### 0.5 Deviation protocol
@@ -40,14 +70,16 @@ The user does NOT manually type file paths. If a required artifact does not yet 
 - Update this document after resolution — a stale document produces a confident but wrong audit.
 
 ### 0.6 Forbidden without explicit user approval
-- Creating new files outside the agreed project structure.
 - Changing a database schema or migration.
 - Adding, removing, or upgrading a dependency.
-- Modifying CI/CD configuration.
 - Touching authentication, authorization, or tenant-isolation logic.
-- Making any external API call or writing to any external service.
-- Deleting or renaming any file.
 - Committing, pushing, or opening a pull request.
+
+### 0.7 Spike mode — exploratory work outside gates
+- Declare "spike" when you need to learn whether an approach will work before committing to it.
+- Spike work skips gate prerequisites and skips rules 0.3 and 0.4. Spikes do NOT advance the cursor and do NOT mark any gate PASSED.
+- Spike code is throwaway by default. Resolve a spike by either (a) discarding the code and starting clean under the normal protocol, or (b) declaring the output is real work, classifying its tier, and applying the matching rules.
+- 0.6 Forbidden still applies during spikes. A spike is permission to learn, not permission to bypass safety.
 
 ---
 

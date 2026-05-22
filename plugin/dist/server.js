@@ -182,6 +182,64 @@ export function createServer() {
             return { content: [{ type: "text", text: String(err) }], isError: true };
         }
     });
+    server.tool("sdlc_session_brief", "Single-call session-start summary. Returns cursor, gates cleared, flagged stages, " +
+        "last Section-18 entry, and active stage gate status in one read. " +
+        "Use this in place of separately reading .sdlc-state.json and Section 18.", { project_root: z.string().optional() }, async ({ project_root }) => {
+        try {
+            const root = resolveProjectRoot(project_root);
+            const sdlcPath = findSdlcFile(root);
+            const content = readSdlcContent(sdlcPath);
+            const gateStatuses = getGateStatuses(content);
+            let state = null;
+            let stateError = null;
+            try {
+                state = readState(root);
+            }
+            catch (e) {
+                stateError = String(e);
+            }
+            let lastSession = "no entries yet";
+            try {
+                const section18 = getSdlcSection(content, "18. Session Log");
+                const rows = section18
+                    .split("\n")
+                    .map((l) => l.trim())
+                    .filter((l) => l.startsWith("|") &&
+                    !l.startsWith("|---") &&
+                    !/^\|\s*date\s*\|/i.test(l));
+                if (rows.length > 0)
+                    lastSession = rows[rows.length - 1];
+            }
+            catch {
+                // Section 18 may not exist yet
+            }
+            const lines = [`SDLC session brief — ${sdlcPath}`, ``];
+            if (state) {
+                lines.push(`Cursor: Stage ${state.cursor.stage} — \`${state.cursor.status}\``);
+                const cleared = state.history.length
+                    ? state.history.map((h) => `Stage ${h.stage} ${h.gate}`).join(", ")
+                    : "none";
+                lines.push(`Gates cleared: ${cleared}`);
+                lines.push(`Flagged stages: ${state.flagged.length ? state.flagged.join(", ") : "none"}`);
+                const activeGate = gateStatuses.find((g) => g.stage === state.cursor.stage);
+                if (activeGate) {
+                    lines.push(`Active stage gate: Stage ${activeGate.stage} (${activeGate.name}) — \`${activeGate.status}\``);
+                }
+            }
+            else {
+                lines.push(`No .sdlc-state.json — falling back to SDLC doc quick reference.`);
+                const passed = gateStatuses.filter((g) => g.status === "PASSED" || g.status === "ONGOING");
+                lines.push(`Gates passed/ongoing: ${passed.length ? passed.map((g) => `Stage ${g.stage}`).join(", ") : "none"}`);
+                if (stateError)
+                    lines.push(`(state read error: ${stateError})`);
+            }
+            lines.push(`Last session: ${lastSession}`);
+            return { content: [{ type: "text", text: lines.join("\n") }] };
+        }
+        catch (err) {
+            return { content: [{ type: "text", text: String(err) }], isError: true };
+        }
+    });
     server.tool("log_decision", "Append a row to Section 15 (Decision Log). Must be called before acting on any significant decision.", {
         stage: z.number().int().describe("Stage number this decision belongs to"),
         decision: z.string().describe("The decision made"),

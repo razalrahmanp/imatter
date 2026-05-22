@@ -2,12 +2,14 @@
 // sdlc-migrate — apply migrations to bring SDLC_VALIDATION.md up to the installed framework version
 //
 // Usage:
-//   sdlc-migrate [--check]              Pre-flight: show what would change (no writes)
-//   sdlc-migrate [--apply]              Apply migrations with backup
-//   sdlc-migrate --to=X.Y.Z             Stop at version X.Y.Z instead of latest
-//   sdlc-migrate --rollback             Restore from the most recent backup
-//   sdlc-migrate --rollback=<timestamp> Restore from a specific backup
-//   sdlc-migrate --list-backups         Show available backups
+//   sdlc-migrate [--check]                Pre-flight: show what would change (no writes)
+//   sdlc-migrate [--apply]                Apply migrations with backup
+//   sdlc-migrate --to=X.Y.Z               Stop at version X.Y.Z instead of latest
+//   sdlc-migrate --rollback               Restore from the most recent backup
+//   sdlc-migrate --rollback=<timestamp>   Restore from a specific backup
+//   sdlc-migrate --list-backups           Show available backups
+//   sdlc-migrate --interactive            Prompt for each unauthorised edit (TTY)
+//   sdlc-migrate --auto-resolve=ACTION    override | discard | skip — non-interactive resolution
 //   sdlc-migrate --project-root=PATH
 //   sdlc-migrate --format=json|text
 //
@@ -22,6 +24,8 @@ import { parseRegions, hashContent } from "./regions.js";
 import { runMigrations } from "./migration.js";
 import { deserializeRegistry } from "./template-generator.js";
 import { resolveProjectRoot, findSdlcFile, readSdlcContent } from "./sdlc.js";
+import { detectEdits, resolveEdits, applyResolutions, loadRegistryFile } from "./resolve-edits.js";
+import { writeFileSync as fsWriteFileSync } from "node:fs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 function parseArgs(argv) {
     const has = (flag) => argv.includes(flag);
@@ -33,6 +37,11 @@ function parseArgs(argv) {
         mode = "rollback";
     else if (has("--list-backups"))
         mode = "list-backups";
+    const autoResolveRaw = get("--auto-resolve=");
+    let autoResolve;
+    if (autoResolveRaw === "override" || autoResolveRaw === "discard" || autoResolveRaw === "skip") {
+        autoResolve = autoResolveRaw;
+    }
     return {
         mode,
         targetVersion: get("--to="),
@@ -40,6 +49,8 @@ function parseArgs(argv) {
         projectRoot: get("--project-root="),
         format: get("--format=") === "json" ? "json" : "text",
         yes: has("--yes") || has("-y"),
+        interactive: has("--interactive"),
+        autoResolve,
     };
 }
 // ── Migration script loader ────────────────────────────────────────────────────
@@ -249,8 +260,11 @@ function renderPreflight(opts) {
             lines.push(`  - ${e.regionId} (line ${e.startLine})`);
         }
         lines.push("");
-        lines.push("Each of these will be wrapped as a user-override during migration.");
-        lines.push("The framework content will be updated; your edits will be preserved as overrides.");
+        lines.push("Each edit needs a resolution before migration can proceed:");
+        lines.push("  --interactive               prompt for each edit (recommended in a terminal)");
+        lines.push("  --auto-resolve=override     wrap all as user-override (default in CI)");
+        lines.push("  --auto-resolve=discard      revert all to framework canonical");
+        lines.push("  --auto-resolve=skip         leave edits in place; continue with warnings");
         lines.push("");
     }
     lines.push(`Run with --apply to proceed. A backup will be written to .sdlc-backups/<timestamp>/`);
@@ -352,6 +366,35 @@ async function main() {
     }
     // Apply
     const registryPath = resolveRegistryPath() ?? join(__dirname, "../../plugin/template/registry.json");
+    // Step 1: resolve unauthorised edits (interactive or auto)
+    if (unauthorizedEdits.length > 0) {
+        let registry;
+        try {
+            registry = loadRegistryFile(registryPath);
+        }
+        catch {
+            registry = undefined;
+        }
+        const detected = detectEdits(sdlcContent, registry);
+        const resolutions = await resolveEdits(detected, {
+            interactive: args.interactive,
+            autoResolve: args.autoResolve,
+        });
+        if (registry && resolutions.length > 0) {
+            const { newContent, applied, skipped } = applyResolutions(sdlcContent, resolutions, registry);
+            if (applied.length > 0) {
+                fsWriteFileSync(sdlcPath, newContent, "utf-8");
+                if (args.format === "text") {
+                    process.stdout.write(`\nResolved ${applied.length} edit(s) before migration:\n` +
+                        applied.map((r) => `  • ${r.regionId}: ${r.action}`).join("\n") + "\n");
+                    if (skipped.length > 0) {
+                        process.stdout.write(`Skipped ${skipped.length} edit(s):\n` +
+                            skipped.map((r) => `  • ${r.regionId}: ${r.action}`).join("\n") + "\n");
+                    }
+                }
+            }
+        }
+    }
     let result;
     try {
         result = await runMigrations({

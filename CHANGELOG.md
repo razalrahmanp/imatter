@@ -11,6 +11,33 @@ Every entry references the migration script (if any) and any manual steps requir
 
 ---
 
+## [1.5.0] — 2026-05-22 — Task tier and session brief
+
+This release introduces the task tier model — ceremony scales with task size, not uniformly across all work. Adds a single-call session-start tool and trims the Forbidden list.
+
+### Added
+- **`sdlc_session_brief` MCP tool** — single read returns cursor, gates cleared, flagged stages, last Section-18 entry, and active-stage gate status. Replaces the 2–3 separate reads previously required at session start.
+- **Task tier model** (Section 0 in SDLC and CLAUDE.md): every task is classified Trivial or Feature before applying Section 0 rules. Trivial tier skips Decision Log, Section 15 negotiation, gate pre-checks, and routine citation discipline.
+- **Spike mode** (SDLC rule 0.7): exploratory work outside the gate flow. Skips gate prerequisites and rules 0.3/0.4 but still respects 0.6 Forbidden.
+- **Testing posture** in `CLAUDE.md`: TDD only for critical paths, regressions, public-interface code, and "keeping" code. Manual verification suffices for exploratory work.
+- **`test:watch` and `test:only` npm scripts** in `sdlc-mcp-server/package.json` — watch mode and pattern-filtered runs for faster inner-loop iteration.
+
+### Changed
+- **SessionStart hook** now calls `sdlc_session_brief` instead of separate `get_project_identity` + `check_gate_status` calls.
+- **Rule 0.1 (Verification)**: citation discipline narrowed — `file:line` required only for gate-passing claims, deviations, and findings that drive user action; routine context reads no longer require ceremonial citations.
+- **Rule 0.3 (Scope)**: small in-place improvements (renames, typos, unused imports) in a file you're already editing are now allowed without negotiation if under ~10 lines and behavior-preserving.
+- **Rule 0.4 (Decision)**: decisions are now logged *after* the code proves them for reversible choices (internal patterns, naming, refactor approach); only hard-to-reverse choices (schema, dependencies, auth, public API) require logging before acting.
+- **Rule 0.6 (Forbidden)** trimmed from 8 items to 4: schema/migration, dependencies, auth/authz, commit/push/PR. Removed items (new files, CI/CD, external API calls, file delete/rename) are now allowed without explicit handshake.
+- **Section 18 Session Log entry** is no longer required for Q&A or trivial-only sessions — only when the session changed gate status, logged a decision, or hit a blocker.
+- **SDLC boilerplate version** bumped 2.0 → 2.1 in `plugin/template/SDLC_VALIDATION.md`.
+
+### Migration
+- No automated migration script — additive rule changes.
+- Existing projects keep their current Section 0 rules until manually updated.
+- To adopt the new rules in an existing project, copy the relevant rule bodies from `plugin/template/SDLC_VALIDATION.md` into your project's `SDLC_VALIDATION.md`.
+
+---
+
 ## [1.4.0] — 2026-05-20 — Region marker foundation
 
 The upgrade contract is now real. This release ships the infrastructure required for external clients to upgrade without losing customisations or audit history.

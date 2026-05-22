@@ -104,7 +104,12 @@ export function parseRegions(docContent) {
         if (startMatch) {
             const attrs = parseAttrs(startMatch[1]);
             const rawType = attrs["type"] ?? "user";
-            const id = attrs["id"];
+            // For user-override blocks, `overrides` doubles as the implicit id when no id= is given.
+            // Convention: id = `${overrides}-override` so the relationship is bidirectional and unique.
+            const id = attrs["id"]
+                ?? (rawType === "user-override" && attrs["overrides"]
+                    ? `${attrs["overrides"]}-override`
+                    : undefined);
             if (!id) {
                 errors.push({
                     code: "MISSING_REQUIRED_ATTR",
@@ -209,7 +214,13 @@ export function parseRegions(docContent) {
         const endMatch = END_RE.exec(line);
         if (endMatch) {
             const endAttrs = parseAttrs(endMatch[1]);
-            const endId = endAttrs["id"] ?? endAttrs["overrides"];
+            // For user-override end tags, `overrides=X` matches a frame with id `X-override`.
+            const rawEndId = endAttrs["id"] ?? endAttrs["overrides"];
+            const overrideId = endAttrs["overrides"] ? `${endAttrs["overrides"]}-override` : undefined;
+            // Prefer the explicit id; if not present, try both raw and override-derived
+            const currentFrameId = currentFrame()?.id;
+            const endId = endAttrs["id"]
+                ?? (overrideId && overrideId === currentFrameId ? overrideId : rawEndId);
             if (!endId) {
                 errors.push({
                     code: "INVALID_END_TAG",

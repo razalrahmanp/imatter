@@ -9,7 +9,7 @@
       "name": "sdlc-validation",
       "source": "./plugin",
       "description": "SDLC validation enforcement — auto-loads your SDLC_VALIDATION.md at every session start, enforces 10-stage gate checks, and blocks Claude from writing code until the correct gate is PASSED.",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "author": {
         "name": "razalrahmanp"
       },
@@ -47,20 +47,11 @@
               {
                 "type": "mcp_tool",
                 "server": "sdlc-validation",
-                "tool": "get_project_identity",
+                "tool": "sdlc_session_brief",
                 "input": {
                   "project_root": "${cwd}"
                 },
-                "statusMessage": "SDLC: loading project identity..."
-              },
-              {
-                "type": "mcp_tool",
-                "server": "sdlc-validation",
-                "tool": "check_gate_status",
-                "input": {
-                  "project_root": "${cwd}"
-                },
-                "statusMessage": "SDLC: checking gate status..."
+                "statusMessage": "SDLC: loading session brief..."
               }
             ]
           }
@@ -90,6 +81,7 @@
           "mcp__sdlc-validation__check_gate_status",
           "mcp__sdlc-validation__get_project_identity",
           "mcp__sdlc-validation__read_sdlc_section",
+          "mcp__sdlc-validation__sdlc_session_brief",
           "mcp__sdlc-validation__log_decision",
           "mcp__sdlc-validation__log_open_item",
           "mcp__sdlc-validation__update_session_log",

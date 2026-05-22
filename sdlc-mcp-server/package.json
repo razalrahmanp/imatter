@@ -21,7 +21,9 @@
     "dev:http": "cross-env MCP_TRANSPORT=http tsx src/index.ts",
     "generate-template": "tsx src/generate-template.ts",
     "test": "node --import tsx/esm --test src/test/stability.test.ts",
-    "test:all": "node --import tsx/esm --test src/test/stability.test.ts src/test/migration-chain.test.ts src/test/audit.test.ts"
+    "test:all": "node --import tsx/esm --test src/test/stability.test.ts src/test/migration-chain.test.ts src/test/audit.test.ts",
+    "test:watch": "node --import tsx/esm --watch --test src/test/stability.test.ts",
+    "test:only": "node --import tsx/esm --test --test-name-pattern"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
